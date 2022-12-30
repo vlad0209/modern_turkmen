@@ -1,0 +1,27 @@
+{
+  "chooseLanguage": "Choose your primary language.",
+  "modernTurkmen": "Modern Turkmen",
+  "prevTutorial": "Previous tutorial",
+  "nextTutorial": "Next tutorial",
+  "startExercise": "Start exercise",
+  "example": "Example",
+  "choose": "Choose",
+  "wrongTry": "Wrong! Try again",
+  "correct": "Correct!",
+  "excellent": "Excellent!",
+  "good": "Good!",
+  "satisfactory": "Satisfactory",
+  "bad": "Bad",
+  "yourResult": "Your result",
+  "buttonContinue": "Continue",
+  "correctAt": "{percent}% correct",
+  "@correctAt": {
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "90"
+      }
+    }
+  },
+  "exercise": "Exercise"
+}

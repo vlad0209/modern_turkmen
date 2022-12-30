@@ -1,0 +1,27 @@
+{
+  "chooseLanguage": "Выберите ваш основной язык",
+  "modernTurkmen": "Современный туркменский",
+  "prevTutorial": "Предыдущий урок",
+  "nextTutorial": "Следующий урок",
+  "startExercise": "Начать упражнение",
+  "example": "Пример",
+  "choose": "Выберите",
+  "wrongTry": "Неправильно! Попробуйте еще раз",
+  "correct": "Правильно!",
+  "excellent": "Отлично!",
+  "good": "Хорошо!",
+  "satisfactory": "Удовлитворительно",
+  "bad": "Плохо",
+  "yourResult": "Ваш результат",
+  "buttonContinue": "Продолжить",
+  "correctAt": "Правильно на {percent}%",
+  "@correctAt": {
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "90"
+      }
+    }
+  },
+  "exercise": "Упражнение"
+}
