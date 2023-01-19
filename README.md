@@ -2,15 +2,38 @@
 
 Modern Turkmen is an app for learning Turkmen language.
 
-## Getting Started
+[Download on the App Store](https://apps.apple.com/us/app/modern-turkmen/id6443850302)
 
-This project is developed using Flutter.
+[Get it on Google Play](https://play.google.com/store/apps/details?id=name.vladhomenko.modern_turkmen)
 
-A few resources to get you started if your are new to Flutter:
+## Getting Started Development
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+This project is developed using Flutter. If you don't have Flutter [install it](https://docs.flutter.dev/get-started/install)
 
-For help getting started with Flutter, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Then clone the repository:
+
+```bash
+$ git clone https://github.com/vlad0209/modern_turkmen.git
+
+$ cd modern_turkmen
+```
+
+Install the [Firebase CLI](https://firebase.google.com/docs/cli?authuser=0&hl=en#install_the_firebase_cli) and log in (run `firebase login`).
+
+Install and run the FlutterFire CLI:
+
+```bash
+$ dart pub global activate flutterfire_cli
+
+$ flutterfire configure
+```
+
+Create a new Firebase project or create a new one.
+
+Install dependencies:
+
+```bash
+$ flutter pub get
+```
+
+To setup back-end and admin panel see [modern_turkmen_admin](https://github.com/vlad0209/modern_turkmen_admin).
