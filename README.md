@@ -28,7 +28,7 @@ $ dart pub global activate flutterfire_cli
 $ flutterfire configure
 ```
 
-Create a new Firebase project or create a new one.
+Create a new Firebase project or select a existing one.
 
 Install dependencies:
 
