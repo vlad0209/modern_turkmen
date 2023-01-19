@@ -40,6 +40,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   PlayerState? playerState;
   bool loadingAudio = false;
   bool isOnline = true;
+  Future? soundFuture;
 
   @override
   void initState() {
@@ -79,7 +80,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
 
   }
 
-  Future? soundFuture;
+
 
   @override
   Widget build(BuildContext context) {
