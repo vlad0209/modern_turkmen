@@ -2,9 +2,9 @@
 
 Modern Turkmen is an app for learning Turkmen language.
 
-[<img alt='Download on the App Store' src='https://vlad-homenko.name/wp-content/themes/colibri-wp-child/images/Download_on_the_App_Store_Badge_US-UK_RGB_wht_092917.svg'>](https://apps.apple.com/us/app/modern-turkmen/id6443850302)
+[<img height='50' alt='Download on the App Store' src='https://raw.githubusercontent.com/vlad0209/modern_turkmen/f5b66a100445b320ee28e6bc87b8bc4eee05fac8/assets/images/App_Store_Badge.svg'>](https://apps.apple.com/us/app/modern-turkmen/id6443850302)
 
-[<img alt='Get it on Google Play' src='https://vlad-homenko.name/wp-content/themes/colibri-wp-child/images/google-play-badge-en.png'>](https://play.google.com/store/apps/details?id=name.vladhomenko.modern_turkmen)
+[<img height='50' alt='Get it on Google Play' src='https://github.com/vlad0209/modern_turkmen/blob/master/assets/images/google-play-badge-en.png?raw=true'>](https://play.google.com/store/apps/details?id=name.vladhomenko.modern_turkmen)
 
 ## Getting Started Development
 
