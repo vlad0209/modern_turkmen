@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "4636626713",
+    "project_id": "modern-turkmen",
+    "storage_bucket": "modern-turkmen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4636626713:android:f6c42bbdb452bb740fff88",
+        "android_client_info": {
+          "package_name": "name.vladhomenko.modern_turkmen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4636626713-k954arskcjja3tdgmhgooinfe9n7ne3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd19Xz4spfm-di2egCTwldu5hsL9XEVhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4636626713-k954arskcjja3tdgmhgooinfe9n7ne3k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "4636626713-d984obah3eseuo0o2aub9rtaoqqcu163.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "name.vladhomenko.modern-turkmen"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
