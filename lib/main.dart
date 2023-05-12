@@ -9,6 +9,7 @@ import 'screens/welcome_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,11 +53,29 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final router = GoRouter(routes: [
+      GoRoute(path: '/', builder: (_, __) {
+        if(preferredLanguage.isEmpty) {
+          return const WelcomeScreen();
+        }
+        if(tutorialId.isEmpty) {
+          return const ContentsTableScreen();
+        }
+
+        return TutorialScreen(tutorialId: tutorialId);
+      }, routes: [
+        GoRoute(path: 'tutorial/:id', builder: (context, state) {
+          return TutorialScreen(tutorialId: state.pathParameters['id']!);
+        })
+      ])
+    ]);
+
     return ChangeNotifierProvider(
       create: (context) => _languageData,
       child: Consumer(
         builder: (BuildContext context, locale, Widget? child) {
-          return MaterialApp(
+          return MaterialApp.router(
+            routerConfig: router,
             debugShowCheckedModeBanner: false,
             locale: Provider.of<LanguageData>(context).locale,
             title: 'Flutter Demo',
@@ -79,21 +98,11 @@ class _MyAppState extends State<MyApp> {
               ),
               primarySwatch: Colors.pink,
             ),
-            home: Builder(
-              builder: (BuildContext context) {
-                if(preferredLanguage.isEmpty) {
-                  return const WelcomeScreen();
-                }
-                if(tutorialId.isEmpty) {
-                  return const ContentsTableScreen();
-                }
-
-                return TutorialScreen(tutorialId: tutorialId);
-              },
-            ),
           );
         },
       ),
     );
   }
 }
+
+
