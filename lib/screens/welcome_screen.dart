@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modern_turkmen/screens/contents_table_screen.dart';
-import '../components/language_select.dart';
-import '../components/animated_route.dart';
+import '../widgets/language_select.dart';
+import '../widgets/animated_route.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:modern_turkmen/components/language_selection_button.dart';
-import 'package:modern_turkmen/components/tutorials_stream.dart';
+import 'package:modern_turkmen/widgets/language_selection_button.dart';
+import 'package:modern_turkmen/widgets/tutorials_stream.dart';
 
 class ContentsTableScreen extends StatefulWidget {
   const ContentsTableScreen({Key? key}) : super(key: key);

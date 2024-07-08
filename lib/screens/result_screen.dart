@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:modern_turkmen/components/animated_route.dart';
+import 'package:modern_turkmen/widgets/animated_route.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modern_turkmen/screens/exercise_screen.dart';

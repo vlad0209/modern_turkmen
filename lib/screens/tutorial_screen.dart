@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:modern_turkmen/components/animated_route.dart';
+import 'package:modern_turkmen/widgets/animated_route.dart';
 import 'package:modern_turkmen/screens/exercise_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -96,24 +96,24 @@ class _TutorialScreenState extends State<TutorialScreen> {
               data: tutorial['content_$localeName'],
               style: {
                 "td": Style(
-                  padding: const EdgeInsets.symmetric(
+                  padding: HtmlPaddings.symmetric(
                       vertical: 3.0, horizontal: 3.0),
                   border: const Border(
                       bottom: BorderSide(color: Colors.purpleAccent)),
                   //display: Display.INLINE_BLOCK,
                 ),
-                "h2": Style(fontSize: const FontSize(50)),
-                "h3": Style(fontSize: const FontSize(40)),
+                "h2": Style(fontSize: FontSize(50)),
+                "h3": Style(fontSize: FontSize(40)),
                 //"body": Style(fontSize: const FontSize(30)),
                 "li em": Style(
-                    padding: const EdgeInsets.only(left: 30.0),
-                    display: Display.INLINE_BLOCK),
+                    padding: HtmlPaddings.only(left: 30.0),
+                    display: Display.inlineBlock),
                 '.column': Style(
-                  width: MediaQuery.of(context).orientation ==
+                  width: Width( MediaQuery.of(context).orientation == 
                       Orientation.landscape
                       ? (MediaQuery.of(context).size.width / 2) - 20
-                      : MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(left: 6.0),
+                      : MediaQuery.of(context).size.width),
+                  padding: HtmlPaddings.only(left: 6.0),
                 )
               },
             ),

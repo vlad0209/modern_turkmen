@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:modern_turkmen/components/language_select.dart';
+import 'package:modern_turkmen/widgets/language_select.dart';
 
 class LanguageSelectionPopup extends StatelessWidget {
   const LanguageSelectionPopup({super.key});

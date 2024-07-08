@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       preferredLanguage = languageCode;
       tutorialId = prefs.getString('tutorialId') ?? '';
     });
-    if(languageCode.isNotEmpty) {
+    if (languageCode.isNotEmpty) {
       _languageData.locale = Locale(languageCode);
     }
   }
@@ -53,21 +53,26 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final router = GoRouter(routes: [
-      GoRoute(path: '/', builder: (_, __) {
-        if(preferredLanguage.isEmpty) {
-          return const WelcomeScreen();
-        }
-        if(tutorialId.isEmpty) {
-          return const ContentsTableScreen();
-        }
-
-        return TutorialScreen(tutorialId: tutorialId);
-      }, routes: [
-        GoRoute(path: 'tutorial/:id', builder: (context, state) {
-          return TutorialScreen(tutorialId: state.pathParameters['id']!);
-        })
-      ])
+    final router = GoRouter(
+      initialLocation: tutorialId.isNotEmpty ? '/tutorial/$tutorialId' : '/',
+      routes: [
+      GoRoute(
+          path: '/',
+          builder: (_, __) {
+            if (preferredLanguage.isEmpty) {
+              return const WelcomeScreen();
+            } else {
+              return const ContentsTableScreen();
+            }
+          },
+          routes: [
+            GoRoute(
+                path: 'tutorial/:id',
+                builder: (context, state) {
+                  return TutorialScreen(
+                      tutorialId: state.pathParameters['id']!);
+                })
+          ])
     ]);
 
     return ChangeNotifierProvider(
@@ -104,5 +109,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-

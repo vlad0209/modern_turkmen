@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:modern_turkmen/components/content_menu_item.dart';
+import 'package:modern_turkmen/widgets/content_menu_item.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../components/animated_route.dart';
-import '../screens/contents_table_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class MainLayout extends StatelessWidget {
   final Widget child;
@@ -27,8 +25,7 @@ class MainLayout extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.of(context)
-                  .push(AnimatedRoute.create(const ContentsTableScreen()));
+              context.go('/');
             },
           )
         ],
