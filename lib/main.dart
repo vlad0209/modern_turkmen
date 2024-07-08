@@ -16,11 +16,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  runApp(MyApp(prefs: prefs,));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.prefs});
+  final SharedPreferences prefs;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -30,8 +32,9 @@ class _MyAppState extends State<MyApp> {
   String tutorialId = '';
   String preferredLanguage = '';
   bool preferencesInitialized = false;
-  final LanguageData _languageData = LanguageData();
-  late SharedPreferences prefs;
+  
+  late final LanguageData _languageData = LanguageData(prefs: widget.prefs);
+  
   @override
   void initState() {
     super.initState();
@@ -39,11 +42,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _loadPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    String languageCode = prefs.getString('languageCode') ?? '';
+    String languageCode = widget.prefs.getString('languageCode') ?? '';
     setState(() {
       preferredLanguage = languageCode;
-      tutorialId = prefs.getString('tutorialId') ?? '';
+      tutorialId = widget.prefs.getString('tutorialId') ?? '';
     });
     if (languageCode.isNotEmpty) {
       _languageData.locale = Locale(languageCode);

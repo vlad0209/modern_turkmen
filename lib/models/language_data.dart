@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LanguageData extends ChangeNotifier {
   Locale? _locale;
- 
+  final SharedPreferences prefs;
+
+  LanguageData({required this.prefs});
 
   Locale? get locale {
     return _locale;
@@ -16,7 +18,6 @@ class LanguageData extends ChangeNotifier {
   }
 
   Future<void> _saveLocale() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('languageCode', _locale!.languageCode);
   }
 

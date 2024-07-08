@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
 
-// Mock class for GoRouter
-class MockGoRouter extends Mock implements GoRouter {}
+import 'main_layout_test.mocks.dart';
+
+@GenerateMocks([GoRouter])
 
 class MockGoRouterProvider extends StatelessWidget {
   const MockGoRouterProvider({
@@ -66,14 +68,15 @@ void main() {
 
   testWidgets('MainLayout navigates to "/" when IconButton is pressed',
       (WidgetTester tester) async {
-    when(() => mockGoRouter.go('/')).thenAnswer((_) async {});
+    
+    when(mockGoRouter.go('/')).thenAnswer((_) {});
 
     await tester
         .pumpWidget(createMainLayout(title: 'Test', child: Container()));
     await tester.tap(find.byIcon(Icons.home));
     await tester.pumpAndSettle();
 
-    verify(() => mockGoRouter.go('/')).called(1);
+    verify(mockGoRouter.go('/')).called(1);
   });
 
   testWidgets('MainLayout correctly sets automaticallyImplyLeading',
