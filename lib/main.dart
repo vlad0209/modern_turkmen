@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               cardColor: Colors.white70,
               textTheme: const TextTheme(
-                bodyText2: TextStyle(
+                bodyMedium: TextStyle(
                   fontSize: 20,
                 ),
               ),
