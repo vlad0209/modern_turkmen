@@ -3,7 +3,7 @@ import 'package:modern_turkmen/models/language_data.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSelectionButton extends StatelessWidget {
-  const LanguageSelectionButton({Key? key}) : super(key: key);
+  const LanguageSelectionButton({super.key});
 
   @override
   Widget build(BuildContext context) {

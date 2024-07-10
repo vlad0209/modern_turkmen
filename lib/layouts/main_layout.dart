@@ -6,11 +6,11 @@ class MainLayout extends StatelessWidget {
   final String title;
   final bool automaticallyImplyLeading;
   const MainLayout({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.automaticallyImplyLeading = false
-  }) : super(key: key);
+  });
 
 
   @override

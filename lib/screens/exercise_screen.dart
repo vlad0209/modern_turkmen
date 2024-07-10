@@ -7,6 +7,7 @@ import 'package:modern_turkmen/widgets/word_card.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modern_turkmen/screens/result_screen.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class ExerciseScreen extends StatefulWidget {
@@ -15,11 +16,10 @@ class ExerciseScreen extends StatefulWidget {
   final String locale;
 
   const ExerciseScreen(
-      {Key? key,
+      {super.key,
       required this.exerciseId,
       required this.tutorialId,
-      required this.locale})
-      : super(key: key);
+      required this.locale});
 
   @override
   State<ExerciseScreen> createState() => _ExerciseScreenState();
@@ -41,13 +41,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   bool loadingAudio = false;
   bool isOnline = true;
   Future? soundFuture;
+  late FirebaseFirestore firestore;
 
   @override
   void initState() {
     super.initState();
-    String path = "tutorials/${widget.tutorialId}/exercises_${widget.locale}";
-    exercisesRef = FirebaseFirestore.instance.collection(path);
-    snapshot = exercisesRef.doc(widget.exerciseId).get();
+    
 
     final AudioContext audioContext = AudioContext(
       iOS: AudioContextIOS(
@@ -61,9 +60,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       android: AudioContextAndroid(
         isSpeakerphoneOn: true,
         stayAwake: true,
-        contentType: AndroidContentType.music,  // i change this
-        usageType: AndroidUsageType.media,  // i change this
-        audioFocus: AndroidAudioFocus.gain,  // i change this
+        contentType: AndroidContentType.music, // i change this
+        usageType: AndroidUsageType.media, // i change this
+        audioFocus: AndroidAudioFocus.gain, // i change this
       ),
     );
     AudioPlayer.global.setGlobalAudioContext(audioContext);
@@ -77,13 +76,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         goToNextItem();
       }
     });
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
+    String path = "tutorials/${widget.tutorialId}/exercises_${widget.locale}";
+    final firestore = context.read<FirebaseFirestore>();
+    exercisesRef = firestore.collection(path);
+    snapshot = exercisesRef.doc(widget.exerciseId).get();
     return MainLayout(
         title: AppLocalizations.of(context)!.exercise,
         child: LocalHeroScope(
@@ -107,11 +107,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                   sentence = data['items'][itemIndex]['sentence'];
                   options =
                       List<String>.from(data['items'][itemIndex]['options']);
-                  soundFuture = player.setSourceUrl(data['items'][itemIndex]
-                  ['sound']);
-
+                  soundFuture =
+                      player.setSourceUrl(data['items'][itemIndex]['sound']);
                 }
-
 
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -162,7 +160,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                           children: [
                             Text(
                               data['example_translation'],
-                              style: const TextStyle(fontStyle: FontStyle.italic),
+                              style:
+                                  const TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ],
                         ),
@@ -170,11 +169,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: parseContent(data['example'], false),
                       ),
-
                       const SizedBox(
                         height: 10,
                       ),
-                      const Divider(height: 1, color: Colors.blue, thickness: 1,),
+                      const Divider(
+                        height: 1,
+                        color: Colors.blue,
+                        thickness: 1,
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -184,9 +186,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         textAlign: TextAlign.center,
                       ),
                       Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: parseContent(sentence, true),
-                            ),
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: parseContent(sentence, true),
+                      ),
                       if (loadingAudio)
                         const Center(
                           child: CircularProgressIndicator(
@@ -213,29 +215,28 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                           children: [
                             Text(AppLocalizations.of(context)!.choose),
                             Wrap(
-                              spacing: 12,
-                              runSpacing: 9,
-                              children: options.map(
-                                      (item) => GestureDetector(
-                                          onTap: () {
-                                            if (!passedItems
-                                                .contains(itemIndex)) {
-                                              chooseWord(item);
-                                              if (!sentence
-                                                  .contains('<f/>')) {
-                                                checkSentence();
-                                              }
+                                spacing: 12,
+                                runSpacing: 9,
+                                children: options
+                                    .map((item) => GestureDetector(
+                                        onTap: () {
+                                          if (!passedItems
+                                              .contains(itemIndex)) {
+                                            chooseWord(item);
+                                            if (!sentence.contains('<f/>')) {
+                                              checkSentence();
                                             }
-                                          },
-                                          child: LocalHero(
-                                            key: Key(item),
-                                            tag: item,
-                                            child: WordCard(
-                                              content: item,
-                                            ),
-                                          ))
-                              ).toList().cast()
-                            ),
+                                          }
+                                        },
+                                        child: LocalHero(
+                                          key: Key(item),
+                                          tag: item,
+                                          child: WordCard(
+                                            content: item,
+                                          ),
+                                        )))
+                                    .toList()
+                                    .cast()),
                           ],
                         ),
                     ],
@@ -289,7 +290,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
           loadingAudio = true;
         });
         soundFuture?.then((value) {
-          if(isOnline) {
+          if (isOnline) {
             player.resume();
           }
         }).timeout(const Duration(seconds: 9), onTimeout: () {
@@ -338,8 +339,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       if (nextExerciseSnapshot.docs.isNotEmpty) {
         nextExerciseId = nextExerciseSnapshot.docs.first.id;
       } else {
-        final CollectionReference tutorialsRef =
-            FirebaseFirestore.instance.collection('tutorials');
+        final CollectionReference tutorialsRef = firestore.collection('tutorials');
         final next = await tutorialsRef
             .orderBy('index')
             .where('public_${widget.locale}', isEqualTo: true)

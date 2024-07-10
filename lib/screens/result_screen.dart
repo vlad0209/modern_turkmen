@@ -12,21 +12,25 @@ class ResultScreen extends StatelessWidget {
   final String? nextExerciseId;
   final String? nextTutorialId;
 
-  const ResultScreen({Key? key, required this.solvedItemsCount,
-    required this.notSolvedItemsCount, required this.tutorialId,
-    this.nextExerciseId, this.nextTutorialId}) : super(key: key);
+  const ResultScreen(
+      {super.key,
+      required this.solvedItemsCount,
+      required this.notSolvedItemsCount,
+      required this.tutorialId,
+      this.nextExerciseId,
+      this.nextTutorialId});
 
   @override
   Widget build(BuildContext context) {
-
-    int percent = ((solvedItemsCount / (notSolvedItemsCount + solvedItemsCount))
-        * 100).toInt();
+    int percent =
+        ((solvedItemsCount / (notSolvedItemsCount + solvedItemsCount)) * 100)
+            .toInt();
     String rate;
-    if(percent >= 80) {
+    if (percent >= 80) {
       rate = AppLocalizations.of(context)!.excellent;
-    } else if(percent >= 60) {
+    } else if (percent >= 60) {
       rate = AppLocalizations.of(context)!.good;
-    } else if(percent >= 40) {
+    } else if (percent >= 40) {
       rate = AppLocalizations.of(context)!.satisfactory;
     } else {
       rate = AppLocalizations.of(context)!.bad;
@@ -35,9 +39,10 @@ class ResultScreen extends StatelessWidget {
         title: AppLocalizations.of(context)!.yourResult,
         child: Column(
           children: [
-            Text(rate, style: const TextStyle(
-                fontWeight: FontWeight.bold
-            ),),
+            Text(
+              rate,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -62,25 +67,26 @@ class ResultScreen extends StatelessWidget {
               ],
             ),
             Text(AppLocalizations.of(context)!.correctAt(percent)),
-            ElevatedButton(onPressed: () => goAHead(context), child: Text(
-                AppLocalizations.of(context)!.buttonContinue))
+            ElevatedButton(
+                onPressed: () => goAHead(context),
+                child: Text(AppLocalizations.of(context)!.buttonContinue))
           ],
-        )
-    );
+        ));
   }
 
   void goAHead(context) {
     String? localeName = AppLocalizations.of(context)?.localeName;
-    if(nextExerciseId != null) {
+    if (nextExerciseId != null) {
       Navigator.of(context).push(AnimatedRoute.create(ExerciseScreen(
-          exerciseId: nextExerciseId!, tutorialId: tutorialId,
+          exerciseId: nextExerciseId!,
+          tutorialId: tutorialId,
           locale: localeName!)));
-    } else if(nextTutorialId != null) {
-      Navigator.of(context).push(AnimatedRoute.create(TutorialScreen(
-          tutorialId: nextTutorialId!)));
+    } else if (nextTutorialId != null) {
+      Navigator.of(context).push(
+          AnimatedRoute.create(TutorialScreen(tutorialId: nextTutorialId!)));
     } else {
-      Navigator.of(context).push(AnimatedRoute.create(TutorialScreen(
-          tutorialId: tutorialId)));
+      Navigator.of(context)
+          .push(AnimatedRoute.create(TutorialScreen(tutorialId: tutorialId)));
     }
   }
 }

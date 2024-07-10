@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -17,12 +18,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final prefs = await SharedPreferences.getInstance();
-  runApp(MyApp(prefs: prefs,));
+  runApp(MyApp(
+    prefs: prefs,
+    firestore: FirebaseFirestore.instance,
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.prefs});
+  const MyApp({super.key, required this.prefs, required this.firestore});
   final SharedPreferences prefs;
+  final FirebaseFirestore firestore;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -32,9 +37,9 @@ class _MyAppState extends State<MyApp> {
   String tutorialId = '';
   String preferredLanguage = '';
   bool preferencesInitialized = false;
-  
+
   late final LanguageData _languageData = LanguageData(prefs: widget.prefs);
-  
+
   @override
   void initState() {
     super.initState();
@@ -56,35 +61,38 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
-      initialLocation: tutorialId.isNotEmpty ? '/tutorial/$tutorialId' : '/',
-      routes: [
-      GoRoute(
-          path: '/',
-          builder: (_, __) {
-            if (preferredLanguage.isEmpty) {
-              return const WelcomeScreen();
-            } else {
-              return const ContentsTableScreen();
-            }
-          },
-          routes: [
-            GoRoute(
-                path: 'tutorial/:id',
-                builder: (context, state) {
-                  return TutorialScreen(
-                      tutorialId: state.pathParameters['id']!);
-                })
-          ])
-    ]);
+        initialLocation: tutorialId.isNotEmpty ? '/tutorial/$tutorialId' : '/',
+        routes: [
+          GoRoute(
+              path: '/',
+              builder: (_, __) {
+                if (preferredLanguage.isEmpty) {
+                  return WelcomeScreen(
+                    firestore: widget.firestore,
+                  );
+                } else {
+                  return const ContentsTableScreen();
+                }
+              },
+              routes: [
+                GoRoute(
+                    path: 'tutorial/:id',
+                    builder: (context, state) {
+                      return TutorialScreen(
+                          tutorialId: state.pathParameters['id']!);
+                    })
+              ])
+        ]);
 
-    return ChangeNotifierProvider(
-      create: (context) => _languageData,
-      child: Consumer(
-        builder: (BuildContext context, locale, Widget? child) {
-          return MaterialApp.router(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => _languageData),
+        Provider<FirebaseFirestore>(create: (context) => FirebaseFirestore.instance)
+      ],
+      child: MaterialApp.router(
             routerConfig: router,
             debugShowCheckedModeBanner: false,
-            locale: Provider.of<LanguageData>(context).locale,
+            locale: _languageData.locale,
             title: 'Flutter Demo',
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -105,9 +113,7 @@ class _MyAppState extends State<MyApp> {
               ),
               primarySwatch: Colors.pink,
             ),
-          );
-        },
-      ),
+          ),
     );
   }
 }
