@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ContentMenuItem extends StatelessWidget {
   const ContentMenuItem({super.key, required this.tutorial});
 
-
   final QueryDocumentSnapshot tutorial;
 
   @override
@@ -20,19 +19,19 @@ class ContentMenuItem extends StatelessWidget {
       padding: const EdgeInsets.all(6.0),
       child: MaterialButton(
         color: Colors.white60,
-        padding: const EdgeInsets.only(left: 6.0, top: 9.0, right: 12.0, bottom: 9.0),
+        padding: const EdgeInsets.only(
+            left: 6.0, top: 9.0, right: 12.0, bottom: 9.0),
         onPressed: () {
-          // Navigator.of(context).push(AnimatedRoute.create(TutorialScreen(
-          //   tutorialId: tutorial.id,)));
           context.go('/tutorial/${tutorial.id}');
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(
-              image: CachedNetworkImageProvider(thumbUrl),
-              width: 120.0,
-            ),
+            if (thumbUrl?.isNotEmpty == true)
+              Image(
+                image: CachedNetworkImageProvider(thumbUrl),
+                width: 120.0,
+              ),
             const SizedBox(
               height: 12.0,
             ),

@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:local_hero/local_hero.dart';
-import 'package:modern_turkmen/widgets/animated_route.dart';
+import 'package:modern_turkmen/routes/animated_route.dart';
 import 'package:modern_turkmen/widgets/word_card.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -46,7 +46,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   @override
   void initState() {
     super.initState();
-    
 
     final AudioContext audioContext = AudioContext(
       iOS: AudioContextIOS(
@@ -81,7 +80,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     String path = "tutorials/${widget.tutorialId}/exercises_${widget.locale}";
-    final firestore = context.read<FirebaseFirestore>();
+    firestore = context.read<FirebaseFirestore>();
     exercisesRef = firestore.collection(path);
     snapshot = exercisesRef.doc(widget.exerciseId).get();
     return MainLayout(
@@ -103,12 +102,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (data.isEmpty) {
                   data = snapshot.data!.data() as Map<String, dynamic>;
-                  data['items'][itemIndex]['options'].shuffle();
-                  sentence = data['items'][itemIndex]['sentence'];
-                  options =
-                      List<String>.from(data['items'][itemIndex]['options']);
-                  soundFuture =
-                      player.setSourceUrl(data['items'][itemIndex]['sound']);
+                  data['items']?[itemIndex]?['options']?.shuffle();
+                  sentence = data['items']?[itemIndex]?['sentence'] ?? '';
+                  options = List<String>.from(
+                      data['items']?[itemIndex]?['options'] ?? []);
+                  final url = data['items']?[itemIndex]?['sound'];
+                  if (url != null) {
+                    soundFuture =
+                        player.setSourceUrl(data['items'][itemIndex]['sound']);
+                  }
                 }
 
                 return SingleChildScrollView(
@@ -139,7 +141,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         ],
                       ),
                       Text(
-                        data['description'],
+                        data['description'] ?? '',
                         style: kBoldTextStyle,
                       ),
                       const SizedBox(
@@ -167,7 +169,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         ),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
-                        children: parseContent(data['example'], false),
+                        children: parseContent(data['example'] ?? '', false),
                       ),
                       const SizedBox(
                         height: 10,
@@ -181,7 +183,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         height: 10,
                       ),
                       Text(
-                        data['items'][itemIndex]['translation'],
+                        data['items']?[itemIndex]?['translation'] ?? '',
                         style: const TextStyle(fontStyle: FontStyle.italic),
                         textAlign: TextAlign.center,
                       ),
@@ -261,6 +263,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
 
   void checkSentence() async {
     String enteredSentence = sentence.replaceAll(RegExp(r'<f>|</f>'), '');
+
     if (enteredSentence != data['items'][itemIndex]['solution']) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -339,7 +342,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       if (nextExerciseSnapshot.docs.isNotEmpty) {
         nextExerciseId = nextExerciseSnapshot.docs.first.id;
       } else {
-        final CollectionReference tutorialsRef = firestore.collection('tutorials');
+        final CollectionReference tutorialsRef =
+            firestore.collection('tutorials');
         final next = await tutorialsRef
             .orderBy('index')
             .where('public_${widget.locale}', isEqualTo: true)

@@ -67,9 +67,7 @@ class _MyAppState extends State<MyApp> {
               path: '/',
               builder: (_, __) {
                 if (preferredLanguage.isEmpty) {
-                  return WelcomeScreen(
-                    firestore: widget.firestore,
-                  );
+                  return const WelcomeScreen();
                 } else {
                   return const ContentsTableScreen();
                 }

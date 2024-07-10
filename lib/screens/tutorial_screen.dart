@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:modern_turkmen/widgets/animated_route.dart';
+import 'package:modern_turkmen/routes/animated_route.dart';
 import 'package:modern_turkmen/screens/exercise_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../layouts/main_layout.dart';
@@ -23,10 +24,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
   String nextTutorialId = '';
   late Map tutorial;
   bool loaded = false;
-  final CollectionReference tutorialsRef =
-      FirebaseFirestore.instance.collection('tutorials');
+  
 
   String exerciseId = '';
+  late final FirebaseFirestore firestore = context.read<FirebaseFirestore>();
+  late final CollectionReference tutorialsRef = firestore.collection('tutorials');
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
           isGreaterThan: data['index']).where('public_$localeName',
           isEqualTo: true).limit(1).get();
       String exercisesPath = 'tutorials/${widget.tutorialId}/exercises_$localeName';
-      final exercise = await FirebaseFirestore.instance.collection(exercisesPath)
+      final exercise = await firestore.collection(exercisesPath)
           .limit(1)
           .get();
 
@@ -77,7 +79,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
   @override
   Widget build(BuildContext context) {
     String? localeName = AppLocalizations.of(context)?.localeName;
-
+    
     if(!loaded) {
       return const Center(child: CircularProgressIndicator(),);
     }
@@ -85,7 +87,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
       title: tutorial['title_$localeName'],
       child: Column(
         children: [
-          if (tutorial['image_url'] != null)
+          if (tutorial['image_url']?.isNotEmpty == true)
             CachedNetworkImage(
               imageUrl: tutorial['image_url'],
               placeholder: (context, url) => const CircularProgressIndicator(),
