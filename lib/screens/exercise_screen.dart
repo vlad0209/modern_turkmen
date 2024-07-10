@@ -41,12 +41,14 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   bool loadingAudio = false;
   bool isOnline = true;
   Future? soundFuture;
-  late FirebaseFirestore firestore;
-
+  late FirebaseFirestore firestore = context.read<FirebaseFirestore>();
+    
   @override
   void initState() {
     super.initState();
-
+    String path = "tutorials/${widget.tutorialId}/exercises_${widget.locale}";
+    exercisesRef = firestore.collection(path);
+    snapshot = exercisesRef.doc(widget.exerciseId).get();
     final AudioContext audioContext = AudioContext(
       iOS: AudioContextIOS(
         defaultToSpeaker: true,
@@ -79,10 +81,9 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String path = "tutorials/${widget.tutorialId}/exercises_${widget.locale}";
-    firestore = context.read<FirebaseFirestore>();
-    exercisesRef = firestore.collection(path);
-    snapshot = exercisesRef.doc(widget.exerciseId).get();
+    
+    
+    
     return MainLayout(
         title: AppLocalizations.of(context)!.exercise,
         child: LocalHeroScope(
