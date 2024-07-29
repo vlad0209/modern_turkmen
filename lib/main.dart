@@ -87,31 +87,33 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => _languageData),
         Provider<FirebaseFirestore>(create: (context) => FirebaseFirestore.instance)
       ],
-      child: MaterialApp.router(
-            routerConfig: router,
-            debugShowCheckedModeBanner: false,
-            locale: _languageData.locale,
-            title: 'Flutter Demo',
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', ''),
-              Locale('ru', ''),
-            ],
-            theme: ThemeData(
-              cardColor: Colors.white70,
-              textTheme: const TextTheme(
-                bodyMedium: TextStyle(
-                  fontSize: 20,
+      child: Consumer<LanguageData>(
+        builder: (context, model, child) => MaterialApp.router(
+              routerConfig: router,
+              debugShowCheckedModeBanner: false,
+              locale: model.locale,
+              title: 'Flutter Demo',
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', ''),
+                Locale('ru', ''),
+              ],
+              theme: ThemeData(
+                cardColor: Colors.white70,
+                textTheme: const TextTheme(
+                  bodyMedium: TextStyle(
+                    fontSize: 20,
+                  ),
                 ),
+                primarySwatch: Colors.pink,
               ),
-              primarySwatch: Colors.pink,
             ),
-          ),
+      ),
     );
   }
 }
