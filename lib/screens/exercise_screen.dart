@@ -170,7 +170,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         ),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
-                        children: parseContent(data['example'] ?? '', false),
+                        children: parseContent(data['example'] ?? '', false, useKeys: false),
                       ),
                       const SizedBox(
                         height: 10,
@@ -337,7 +337,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       });
     } else {
       var nextExerciseSnapshot =
-          await exercisesRef.startAfterDocument(await snapshot).limit(1).get();
+          await exercisesRef.orderBy('order_number').startAfterDocument(await snapshot).limit(1).get();
       String? nextExerciseId;
       String? nextTutorialId;
       if (nextExerciseSnapshot.docs.isNotEmpty) {
@@ -369,7 +369,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     }
   }
 
-  List<Widget> parseContent(String content, bool animateWordCard) {
+  List<Widget> parseContent(String content, bool animateWordCard, {bool useKeys = true}) {
     List<Widget> widgets = [];
     RegExp exp = RegExp(r'(<f>(.*?)</f>|<f/>|\(.*?\))');
     List<String> parts = content.split(exp);
@@ -387,7 +387,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
             content: word,
           );
           widgets.add(LocalHero(
-            key: Key(word),
+            key: useKeys ? Key(word) : null,
             tag: word,
             enabled: animateWordCard,
             child: wordCard,

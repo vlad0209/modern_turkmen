@@ -24,11 +24,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
   String nextTutorialId = '';
   late Map tutorial;
   bool loaded = false;
-  
 
   String exerciseId = '';
   late final FirebaseFirestore firestore = context.read<FirebaseFirestore>();
-  late final CollectionReference tutorialsRef = firestore.collection('tutorials');
+  late final CollectionReference tutorialsRef =
+      firestore.collection('tutorials');
 
   @override
   void initState() {
@@ -46,42 +46,45 @@ class _TutorialScreenState extends State<TutorialScreen> {
         loaded = true;
       });
 
-      final prev = await tutorialsRef.orderBy('index', descending: true).where(
-          'index', isLessThan: data['index']).where('public_$localeName',
-          isEqualTo: true).limit(1).get();
-
-
-      final next = await tutorialsRef.orderBy('index').where('index',
-          isGreaterThan: data['index']).where('public_$localeName',
-          isEqualTo: true).limit(1).get();
-      String exercisesPath = 'tutorials/${widget.tutorialId}/exercises_$localeName';
-      final exercise = await firestore.collection(exercisesPath)
+      final prev = await tutorialsRef
+          .orderBy('index', descending: true)
+          .where('index', isLessThan: data['index'])
+          .where('public_$localeName', isEqualTo: true)
           .limit(1)
           .get();
 
+      final next = await tutorialsRef
+          .orderBy('index')
+          .where('index', isGreaterThan: data['index'])
+          .where('public_$localeName', isEqualTo: true)
+          .limit(1)
+          .get();
+      String exercisesPath =
+          'tutorials/${widget.tutorialId}/exercises_$localeName';
+      final exercise = await firestore.collection(exercisesPath).orderBy('order_number').limit(1).get();
+
       setState(() {
-        if(prev.docs.isNotEmpty) {
+        if (prev.docs.isNotEmpty) {
           prevTutorialId = prev.docs.first.id;
         }
-        if(next.docs.isNotEmpty) {
+        if (next.docs.isNotEmpty) {
           nextTutorialId = next.docs.first.id;
         }
-        if(exercise.docs.isNotEmpty) {
+        if (exercise.docs.isNotEmpty) {
           exerciseId = exercise.docs.first.id;
         }
-
       });
     });
-
-
   }
 
   @override
   Widget build(BuildContext context) {
     String? localeName = AppLocalizations.of(context)?.localeName;
-    
-    if(!loaded) {
-      return const Center(child: CircularProgressIndicator(),);
+
+    if (!loaded) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
     return MainLayout(
       title: tutorial['title_$localeName'],
@@ -98,8 +101,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
               data: tutorial['content_$localeName'],
               style: {
                 "td": Style(
-                  padding: HtmlPaddings.symmetric(
-                      vertical: 3.0, horizontal: 3.0),
+                  padding:
+                      HtmlPaddings.symmetric(vertical: 3.0, horizontal: 3.0),
                   border: const Border(
                       bottom: BorderSide(color: Colors.purpleAccent)),
                   //display: Display.INLINE_BLOCK,
@@ -111,8 +114,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     padding: HtmlPaddings.only(left: 30.0),
                     display: Display.inlineBlock),
                 '.column': Style(
-                  width: Width( MediaQuery.of(context).orientation == 
-                      Orientation.landscape
+                  width: Width(MediaQuery.of(context).orientation ==
+                          Orientation.landscape
                       ? (MediaQuery.of(context).size.width / 2) - 20
                       : MediaQuery.of(context).size.width),
                   padding: HtmlPaddings.only(left: 6.0),
@@ -122,18 +125,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if(exerciseId.isNotEmpty)
+              if (exerciseId.isNotEmpty)
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(AnimatedRoute.create(
-                      ExerciseScreen(
-                          exerciseId: exerciseId,
-                          tutorialId: widget.tutorialId,
-                          locale: localeName!
-                      )
-                      )
-                  );
-                }, child: Text(AppLocalizations.of(context)!.startExercise))
+                          ExerciseScreen(
+                              exerciseId: exerciseId,
+                              tutorialId: widget.tutorialId,
+                              locale: localeName!)));
+                    },
+                    child: Text(AppLocalizations.of(context)!.startExercise))
             ],
           ),
           Row(
@@ -143,8 +144,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(AnimatedRoute.create(
-                          TutorialScreen(tutorialId: prevTutorialId))
-                      );
+                          TutorialScreen(tutorialId: prevTutorialId)));
                     },
                     child: Row(
                       children: [
@@ -152,13 +152,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
                         Text(AppLocalizations.of(context)!.prevTutorial)
                       ],
                     )),
-
               if (nextTutorialId.isNotEmpty)
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(AnimatedRoute.create(
-                          TutorialScreen(tutorialId: nextTutorialId))
-                      );
+                          TutorialScreen(tutorialId: nextTutorialId)));
                     },
                     child: Row(
                       children: [
@@ -173,4 +171,3 @@ class _TutorialScreenState extends State<TutorialScreen> {
     );
   }
 }
-
