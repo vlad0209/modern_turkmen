@@ -2,10 +2,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:local_hero/local_hero.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:modern_turkmen/routes/animated_route.dart';
 import 'package:modern_turkmen/widgets/word_card.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modern_turkmen/screens/result_screen.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
@@ -51,14 +51,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     snapshot = exercisesRef.doc(widget.exerciseId).get();
     final AudioContext audioContext = AudioContext(
       iOS: AudioContextIOS(
-        defaultToSpeaker: true,
-        category: AVAudioSessionCategory.ambient,
-        options: [
-          AVAudioSessionOptions.defaultToSpeaker,
+        category: AVAudioSessionCategory.playback,
+        options: const {
           AVAudioSessionOptions.mixWithOthers,
-        ],
+        }
       ),
-      android: AudioContextAndroid(
+      android: const AudioContextAndroid(
         isSpeakerphoneOn: true,
         stayAwake: true,
         contentType: AndroidContentType.music, // i change this
@@ -66,7 +64,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         audioFocus: AndroidAudioFocus.gain, // i change this
       ),
     );
-    AudioPlayer.global.setGlobalAudioContext(audioContext);
+    AudioPlayer.global.setAudioContext(audioContext);
 
     player.onPlayerStateChanged.listen((event) {
       setState(() {
@@ -255,7 +253,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         ));
   }
 
-  void chooseWord(word) {
+  void chooseWord(String word) {
     setState(() {
       options.remove(word);
       sentence = sentence.replaceFirst('<f/>', '<f>$word</f>');
@@ -358,13 +356,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       }
 
       Future.delayed(const Duration(seconds: 2), () {
-        Navigator.of(context).push(AnimatedRoute.create(ResultScreen(
+        if(mounted) {
+          Navigator.of(context).push(AnimatedRoute.create(ResultScreen(
           tutorialId: widget.tutorialId,
           solvedItemsCount: solvedItems.length,
           notSolvedItemsCount: notSolvedItems.length,
           nextExerciseId: nextExerciseId,
           nextTutorialId: nextTutorialId,
         )));
+        }
       });
     }
   }

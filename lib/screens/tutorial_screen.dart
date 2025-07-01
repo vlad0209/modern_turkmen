@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:modern_turkmen/routes/animated_route.dart';
 import 'package:modern_turkmen/screens/exercise_screen.dart';
@@ -37,43 +37,49 @@ class _TutorialScreenState extends State<TutorialScreen> {
         .then((prefs) => prefs.setString('tutorialId', widget.tutorialId));
 
     Future.delayed(Duration.zero, () async {
-      String? localeName = AppLocalizations.of(context)?.localeName;
+      if (mounted) {
+        String? localeName = AppLocalizations.of(context)?.localeName;
 
-      var tutorialSnapshot = await tutorialsRef.doc(widget.tutorialId).get();
-      var data = tutorialSnapshot.data() as Map;
-      setState(() {
-        tutorial = data;
-        loaded = true;
-      });
+        var tutorialSnapshot = await tutorialsRef.doc(widget.tutorialId).get();
+        var data = tutorialSnapshot.data() as Map;
+        setState(() {
+          tutorial = data;
+          loaded = true;
+        });
 
-      final prev = await tutorialsRef
-          .orderBy('index', descending: true)
-          .where('index', isLessThan: data['index'])
-          .where('public_$localeName', isEqualTo: true)
-          .limit(1)
-          .get();
+        final prev = await tutorialsRef
+            .orderBy('index', descending: true)
+            .where('index', isLessThan: data['index'])
+            .where('public_$localeName', isEqualTo: true)
+            .limit(1)
+            .get();
 
-      final next = await tutorialsRef
-          .orderBy('index')
-          .where('index', isGreaterThan: data['index'])
-          .where('public_$localeName', isEqualTo: true)
-          .limit(1)
-          .get();
-      String exercisesPath =
-          'tutorials/${widget.tutorialId}/exercises_$localeName';
-      final exercise = await firestore.collection(exercisesPath).orderBy('order_number').limit(1).get();
+        final next = await tutorialsRef
+            .orderBy('index')
+            .where('index', isGreaterThan: data['index'])
+            .where('public_$localeName', isEqualTo: true)
+            .limit(1)
+            .get();
+        String exercisesPath =
+            'tutorials/${widget.tutorialId}/exercises_$localeName';
+        final exercise = await firestore
+            .collection(exercisesPath)
+            .orderBy('order_number')
+            .limit(1)
+            .get();
 
-      setState(() {
-        if (prev.docs.isNotEmpty) {
-          prevTutorialId = prev.docs.first.id;
-        }
-        if (next.docs.isNotEmpty) {
-          nextTutorialId = next.docs.first.id;
-        }
-        if (exercise.docs.isNotEmpty) {
-          exerciseId = exercise.docs.first.id;
-        }
-      });
+        setState(() {
+          if (prev.docs.isNotEmpty) {
+            prevTutorialId = prev.docs.first.id;
+          }
+          if (next.docs.isNotEmpty) {
+            nextTutorialId = next.docs.first.id;
+          }
+          if (exercise.docs.isNotEmpty) {
+            exerciseId = exercise.docs.first.id;
+          }
+        });
+      }
     });
   }
 

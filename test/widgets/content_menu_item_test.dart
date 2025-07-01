@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:modern_turkmen/widgets/content_menu_item.dart';
 
 import '../layouts/main_layout_test.dart';

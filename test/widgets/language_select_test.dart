@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:modern_turkmen/models/language_data.dart';
 import 'package:modern_turkmen/widgets/language_select.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

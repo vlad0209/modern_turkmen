@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:modern_turkmen/screens/welcome_screen.dart';
 import 'package:modern_turkmen/screens/contents_table_screen.dart';
 import 'package:modern_turkmen/widgets/language_select.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() {

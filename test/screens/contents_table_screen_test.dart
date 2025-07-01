@@ -6,7 +6,7 @@ import 'package:modern_turkmen/screens/contents_table_screen.dart';
 import 'package:modern_turkmen/widgets/content_menu_item.dart';
 import 'package:modern_turkmen/widgets/language_selection_button.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 
 void main() {
   late FakeFirebaseFirestore fakeFirestore;

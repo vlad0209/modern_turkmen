@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modern_turkmen/routes/animated_route.dart';
 import 'package:modern_turkmen/layouts/main_layout.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:modern_turkmen/screens/exercise_screen.dart';
 import 'package:modern_turkmen/screens/tutorial_screen.dart';
 
@@ -74,7 +74,7 @@ class ResultScreen extends StatelessWidget {
         ));
   }
 
-  void goAHead(context) {
+  void goAHead(BuildContext context) {
     String? localeName = AppLocalizations.of(context)?.localeName;
     if (nextExerciseId != null) {
       Navigator.of(context).push(AnimatedRoute.create(ExerciseScreen(

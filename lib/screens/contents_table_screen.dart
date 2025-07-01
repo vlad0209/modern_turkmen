@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:modern_turkmen/widgets/content_menu_item.dart';
 import 'package:modern_turkmen/widgets/language_selection_button.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class ContentsTableScreen extends StatelessWidget {

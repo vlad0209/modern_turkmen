@@ -29,6 +29,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    ndkVersion = "26.3.11579264"
+    namespace "name.vladhomenko.modern_turkmen"
     compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
@@ -45,7 +47,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "name.vladhomenko.modern_turkmen"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
