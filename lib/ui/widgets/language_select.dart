@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
 
-import '../view_model/language_select_view_model.dart';
+import '../view_model/language_view_model.dart';
 
 class LanguageSelect extends ConsumerWidget {
 
@@ -11,7 +12,7 @@ class LanguageSelect extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(languageSelectViewModelProvider);
+    ref.watch(languageViewModelProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -32,23 +33,24 @@ class LanguageSelect extends ConsumerWidget {
               minWidth: 120,
               onPressed: () async {
                 if(callback != null) {
-                  ref.read(languageSelectViewModelProvider.notifier).setLanguage('en');
+                  ref.read(languageViewModelProvider.notifier).setLanguage('en');
                   callback!();
                 } else {
-                  Navigator.pop(context);
+                  context.pop();
                 }
               },
               padding: const EdgeInsets.fromLTRB(6.0, 9.0, 12.0, 9.0),
               color: Colors.white38,
               child: const Text('English', style: TextStyle(fontSize: 20.0),),
             ),
+            const SizedBox(height: 11.0),
             MaterialButton(
               minWidth: 120,
               onPressed: () async {
                 if(callback != null) {
                   callback!();
                 } else {
-                  Navigator.pop(context);
+                  context.pop();
                 }
               },
               padding: const EdgeInsets.fromLTRB(6.0, 9.0, 12.0, 9.0),

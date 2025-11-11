@@ -22,4 +22,7 @@ class AudioRepositoryRemote implements AudioRepository {
   Future<void> resumeAudio() {
     return _audioPlayerService.resumeAudio();
   }
+  
+  @override
+  Stream<void> get onPlayingStarted => _audioPlayerService.onPlayingStarted;
 }

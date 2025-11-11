@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:modern_turkmen/data/services/firestore/model/tutorial/tutorial_firestore_model.dart';
 
 import 'model/exercise/exercise_firestore_model.dart';
@@ -12,7 +13,7 @@ class FirestoreService {
     return _firestore
         .collection('tutorials')
         .where('public_$localeName', isEqualTo: true)
-        .orderBy('index')
+        .orderBy('created_at')
         .snapshots()
         .map((querySnapshot) {
       return querySnapshot.docs
@@ -26,6 +27,9 @@ class FirestoreService {
 
   Future<ExerciseFirestoreModel> getExerciseById(
       String tutorialId, String languageCode, String exerciseId) async {
+        if (kDebugMode) {
+          print("Fetching exercise: tutorialId=$tutorialId, languageCode=$languageCode, exerciseId=$exerciseId");
+        }
     final docSnapshot = await _firestore
         .collection('tutorials')
         .doc(tutorialId)

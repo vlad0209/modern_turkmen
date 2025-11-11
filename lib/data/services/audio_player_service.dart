@@ -23,6 +23,8 @@ class AudioPlayerService {
 
   Stream<void> get onPlayingCompleted => _audioPlayer.onPlayerComplete;
 
+  Stream<void> get onPlayingStarted => _audioPlayer.onPlayerStateChanged.where((state) => state == PlayerState.playing).map((_) {});
+
   Future? setSourceUrl(String url) => _audioPlayer.setSourceUrl(url);
 
   Future<void> pauseAudio() => _audioPlayer.pause();

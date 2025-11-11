@@ -8,5 +8,5 @@ abstract class LanguageRepository extends ChangeNotifier {
 
   void setLanguage(String languageCode);
 
-  void toggleLocale();
+  Future<void> toggleLocale();
 }

@@ -6,7 +6,7 @@ part of 'exercise_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exerciseViewModelHash() => r'49031eaac1755440879e264de75106a904ec0032';
+String _$exerciseViewModelHash() => r'1c7d66b86c90645d74f30d20d451c7456ed66777';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,11 +31,15 @@ class _SystemHash {
 
 abstract class _$ExerciseViewModel
     extends BuildlessAutoDisposeAsyncNotifier<ExerciseUiState> {
-  late final ExerciseViewModelParams params;
+  late final String tutorialId;
+  late final String languageCode;
+  late final String exerciseId;
 
-  FutureOr<ExerciseUiState> build(
-    ExerciseViewModelParams params,
-  );
+  FutureOr<ExerciseUiState> build({
+    required String tutorialId,
+    required String languageCode,
+    required String exerciseId,
+  });
 }
 
 /// See also [ExerciseViewModel].
@@ -48,11 +52,15 @@ class ExerciseViewModelFamily extends Family<AsyncValue<ExerciseUiState>> {
   const ExerciseViewModelFamily();
 
   /// See also [ExerciseViewModel].
-  ExerciseViewModelProvider call(
-    ExerciseViewModelParams params,
-  ) {
+  ExerciseViewModelProvider call({
+    required String tutorialId,
+    required String languageCode,
+    required String exerciseId,
+  }) {
     return ExerciseViewModelProvider(
-      params,
+      tutorialId: tutorialId,
+      languageCode: languageCode,
+      exerciseId: exerciseId,
     );
   }
 
@@ -61,7 +69,9 @@ class ExerciseViewModelFamily extends Family<AsyncValue<ExerciseUiState>> {
     covariant ExerciseViewModelProvider provider,
   ) {
     return call(
-      provider.params,
+      tutorialId: provider.tutorialId,
+      languageCode: provider.languageCode,
+      exerciseId: provider.exerciseId,
     );
   }
 
@@ -84,10 +94,15 @@ class ExerciseViewModelFamily extends Family<AsyncValue<ExerciseUiState>> {
 class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
     ExerciseViewModel, ExerciseUiState> {
   /// See also [ExerciseViewModel].
-  ExerciseViewModelProvider(
-    ExerciseViewModelParams params,
-  ) : this._internal(
-          () => ExerciseViewModel()..params = params,
+  ExerciseViewModelProvider({
+    required String tutorialId,
+    required String languageCode,
+    required String exerciseId,
+  }) : this._internal(
+          () => ExerciseViewModel()
+            ..tutorialId = tutorialId
+            ..languageCode = languageCode
+            ..exerciseId = exerciseId,
           from: exerciseViewModelProvider,
           name: r'exerciseViewModelProvider',
           debugGetCreateSourceHash:
@@ -97,7 +112,9 @@ class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
           dependencies: ExerciseViewModelFamily._dependencies,
           allTransitiveDependencies:
               ExerciseViewModelFamily._allTransitiveDependencies,
-          params: params,
+          tutorialId: tutorialId,
+          languageCode: languageCode,
+          exerciseId: exerciseId,
         );
 
   ExerciseViewModelProvider._internal(
@@ -107,17 +124,23 @@ class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.params,
+    required this.tutorialId,
+    required this.languageCode,
+    required this.exerciseId,
   }) : super.internal();
 
-  final ExerciseViewModelParams params;
+  final String tutorialId;
+  final String languageCode;
+  final String exerciseId;
 
   @override
   FutureOr<ExerciseUiState> runNotifierBuild(
     covariant ExerciseViewModel notifier,
   ) {
     return notifier.build(
-      params,
+      tutorialId: tutorialId,
+      languageCode: languageCode,
+      exerciseId: exerciseId,
     );
   }
 
@@ -126,13 +149,18 @@ class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: ExerciseViewModelProvider._internal(
-        () => create()..params = params,
+        () => create()
+          ..tutorialId = tutorialId
+          ..languageCode = languageCode
+          ..exerciseId = exerciseId,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        params: params,
+        tutorialId: tutorialId,
+        languageCode: languageCode,
+        exerciseId: exerciseId,
       ),
     );
   }
@@ -145,13 +173,18 @@ class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
 
   @override
   bool operator ==(Object other) {
-    return other is ExerciseViewModelProvider && other.params == params;
+    return other is ExerciseViewModelProvider &&
+        other.tutorialId == tutorialId &&
+        other.languageCode == languageCode &&
+        other.exerciseId == exerciseId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, params.hashCode);
+    hash = _SystemHash.combine(hash, tutorialId.hashCode);
+    hash = _SystemHash.combine(hash, languageCode.hashCode);
+    hash = _SystemHash.combine(hash, exerciseId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -161,8 +194,14 @@ class ExerciseViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
 // ignore: unused_element
 mixin ExerciseViewModelRef
     on AutoDisposeAsyncNotifierProviderRef<ExerciseUiState> {
-  /// The parameter `params` of this provider.
-  ExerciseViewModelParams get params;
+  /// The parameter `tutorialId` of this provider.
+  String get tutorialId;
+
+  /// The parameter `languageCode` of this provider.
+  String get languageCode;
+
+  /// The parameter `exerciseId` of this provider.
+  String get exerciseId;
 }
 
 class _ExerciseViewModelProviderElement
@@ -171,8 +210,11 @@ class _ExerciseViewModelProviderElement
   _ExerciseViewModelProviderElement(super.provider);
 
   @override
-  ExerciseViewModelParams get params =>
-      (origin as ExerciseViewModelProvider).params;
+  String get tutorialId => (origin as ExerciseViewModelProvider).tutorialId;
+  @override
+  String get languageCode => (origin as ExerciseViewModelProvider).languageCode;
+  @override
+  String get exerciseId => (origin as ExerciseViewModelProvider).exerciseId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

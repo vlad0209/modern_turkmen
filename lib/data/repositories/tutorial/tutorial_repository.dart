@@ -8,4 +8,6 @@ abstract class TutorialRepository {
   Future<Tutorial> getTutorial(String tutorialId);
 
   void bookmarkTutorial(String tutorialId);
+
+  Future<String?> getBookmarkedTutorialId();
 }

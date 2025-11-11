@@ -9,6 +9,8 @@ import '../data/repositories/audio/audio_repository_remote.dart';
 import '../data/repositories/exercise/exercise_repository.dart';
 import '../data/repositories/exercise/exercise_repository_remote.dart';
 import '../data/repositories/language/language_repository.dart';
+import '../data/repositories/onboarding/onboarding_repository.dart';
+import '../data/repositories/onboarding/onboarding_repository_local.dart';
 import '../data/repositories/tutorial/tutorial_repository.dart';
 import '../data/repositories/tutorial/tutorial_repository_remote.dart';
 import '../data/services/audio_player_service.dart';
@@ -63,7 +65,12 @@ AudioRepository audioRepository(Ref ref) {
 
 @riverpod
 LanguageRepository languageRepository(Ref ref) {
-  final languageRepository = LanguageRepositoryLocal(
+  return LanguageRepositoryLocal(
       sharedPreferencesService: ref.watch(sharedPreferencesServiceProvider));
-  return languageRepository;
+}
+
+@riverpod
+OnboardingRepository onboardingRepository(Ref ref) {
+  return OnboardingRepositoryLocal(
+      sharedPreferencesService: ref.watch(sharedPreferencesServiceProvider));
 }

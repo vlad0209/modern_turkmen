@@ -12,7 +12,8 @@ class ExerciseRepositoryRemote implements ExerciseRepository {
   ExerciseRepositoryRemote({
     required FirestoreService firestoreService,
     required SharedPreferencesService sharedPreferencesService,
-  }) : _firestoreService = firestoreService, _sharedPreferencesService = sharedPreferencesService;
+  })  : _firestoreService = firestoreService,
+        _sharedPreferencesService = sharedPreferencesService;
 
   @override
   Future<Exercise> getExercise(
@@ -26,21 +27,32 @@ class ExerciseRepositoryRemote implements ExerciseRepository {
         description: model.description,
         example: model.example,
         exampleTranslation: model.exampleTranslation,
-        items: model.items.map((json) => ExerciseItem.fromJson(json)).toList());
+        items: model.items
+            .map((json) => ExerciseItem.fromJson({
+                  ...json,
+                  'options': List.from(json['options'])
+                    ..shuffle()
+                }))
+            .toList());
   }
-  
+
   @override
-  Future<String?> getNextExerciseId({required String tutorialId, required String languageCode, required String currentExerciseId}) {
+  Future<String?> getNextExerciseId(
+      {required String tutorialId,
+      required String languageCode,
+      required String currentExerciseId}) {
     return _firestoreService.getNextExerciseId(
       tutorialId: tutorialId,
       languageCode: languageCode,
       currentExerciseId: currentExerciseId,
     );
   }
-  
+
   @override
   Future<String?> getFirstExerciseId(String tutorialId) async {
-    final languageCode = await _sharedPreferencesService.getPreferredLanguageCode();
-    return await _firestoreService.getFirstExerciseId(tutorialId: tutorialId, languageCode: languageCode);
+    final languageCode =
+        await _sharedPreferencesService.getPreferredLanguageCode();
+    return await _firestoreService.getFirstExerciseId(
+        tutorialId: tutorialId, languageCode: languageCode);
   }
 }

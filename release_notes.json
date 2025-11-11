@@ -1,6 +1,6 @@
 [
     {
         "language": "en-US",
-        "text": "Updated the app to target the latest Android version"
+        "text": "- Replaced Navigator with GoRouter for navigation in ExerciseScreen, LanguageSelect, ResultScreen, TutorialScreen, and WelcomeScreen. \n- Updated ExerciseScreen to improve audio playback state management and UI updates.\n- Refactored LanguageSelect to use the new language view model.\n- Introduced OnboardingRepository and its local implementation for onboarding state management.\n- Created AppUiState and AppViewModel to manage application-wide UI state.\n- Added routing logic for onboarding and tutorial navigation.\n- Removed deprecated dependencies and updated pubspec.yaml for new packages."
     }
 ]

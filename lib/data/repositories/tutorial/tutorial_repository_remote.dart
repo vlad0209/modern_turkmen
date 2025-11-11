@@ -67,4 +67,10 @@ class TutorialRepositoryRemote with Localizer implements TutorialRepository {
   void bookmarkTutorial(String tutorialId) {
     _sharedPreferencesService.bookmarkTutorial(tutorialId);
   }
+  
+  @override
+  Future<String?> getBookmarkedTutorialId() async {
+    return await _sharedPreferencesService.getBookmarkedTutorialId();
+    
+  }
 }

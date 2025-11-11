@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:local_hero/local_hero.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
-import 'package:modern_turkmen/routes/animated_route.dart';
-import 'package:modern_turkmen/ui/ui_state/exercise_ui_state.dart';
 import 'package:modern_turkmen/widgets/word_card.dart';
 import 'package:modern_turkmen/ui/widgets/main_layout.dart';
 import 'package:modern_turkmen/ui/widgets/result_screen.dart';
@@ -32,30 +32,37 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
   @override
   void initState() {
     super.initState();
+    final viewModel =
     ref
-        .read(exerciseViewModelProvider(ExerciseViewModelParams(
+        .read(exerciseViewModelProvider(
                 tutorialId: widget.tutorialId,
                 exerciseId: widget.exerciseId,
-                languageCode: widget.locale))
-            .notifier)
-        .listenOnPlayingCompleted((_) {
+                languageCode: widget.locale)
+            .notifier);
+    viewModel.listenOnPlayingStarted((_) {
       setState(() {
         loadingAudio = false;
       });
+    });
+    viewModel.listenOnPlayingCompleted((_) {
       goToNextItem();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = exerciseViewModelProvider(
-        ExerciseViewModelParams(
+    final asyncUiState = ref.watch(exerciseViewModelProvider(
+        tutorialId: widget.tutorialId,
+        exerciseId: widget.exerciseId,
+        languageCode: widget.locale));
+    if (kDebugMode) {
+      print("Rebuilding ExerciseScreen");
+    }
+    final viewModel = ref.read(exerciseViewModelProvider(
             tutorialId: widget.tutorialId,
             exerciseId: widget.exerciseId,
-            languageCode: widget.locale));
-    final asyncUiState = ref.watch(provider);
-    final notifier = provider.notifier;
-  
+            languageCode: widget.locale)
+        .notifier);
 
     return MainLayout(
         title: AppLocalizations.of(context)!.exercise,
@@ -159,17 +166,13 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                       if (uiState.isPlayingAudio)
                         IconButton(
                             onPressed: () {
-                              ref
-                                  .read(notifier)
-                                  .pauseAudio();
+                              viewModel.pauseAudio();
                             },
                             icon: const Icon(Icons.pause)),
-                      if (uiState.isPlayingAudio == false)
+                      if (uiState.isPlayingAudio == false && uiState.sentence.contains('<f/>') == false)
                         IconButton(
                             onPressed: () {
-                              ref
-                                  .read(notifier)
-                                  .resumeAudio();
+                              viewModel.resumeAudio();
                             },
                             icon: const Icon(Icons.play_arrow)),
                       const SizedBox(
@@ -184,13 +187,13 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                                 runSpacing: 9,
                                 children: uiState.options
                                     .map((item) => GestureDetector(
-                                        onTap: () {
+                                        onTap: () async {
                                           if (!uiState.passedItems
                                               .contains(uiState.itemIndex)) {
-                                            ref.read(notifier).chooseWord(item);
-                                            if (!uiState.sentence
+                                            final sentence = viewModel.chooseWord(item);
+                                            if (!sentence
                                                 .contains('<f/>')) {
-                                              checkSentence(uiState);
+                                              checkSentence();
                                             }
                                           }
                                         },
@@ -212,27 +215,30 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
         ));
   }
 
-  void checkSentence(ExerciseUiState uiState) async {
-    String enteredSentence = uiState.sentence.replaceAll(RegExp(r'<f>|</f>'), '');
-
-    final viewModel = ref.read(exerciseViewModelProvider(ExerciseViewModelParams(
+  void checkSentence() async {
+    final uiState = ref.read(exerciseViewModelProvider(
         tutorialId: widget.tutorialId,
         exerciseId: widget.exerciseId,
-        languageCode: widget.locale)).notifier);
+        languageCode: widget.locale)).value!;
 
-    if (enteredSentence != uiState.exercise.items?[uiState.itemIndex].solution) {
+    String enteredSentence =
+        uiState.sentence.replaceAll(RegExp(r'<f>|</f>'), '');
+
+    final viewModel = ref.read(exerciseViewModelProvider(
+            tutorialId: widget.tutorialId, exerciseId: widget.exerciseId, languageCode: widget.locale)
+        .notifier);
+    
+
+    if (enteredSentence !=
+        uiState.exercise.items?[uiState.itemIndex].solution) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.wrongTry)));
       Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          // sentence = data['items'][itemIndex]['sentence'];
-          // options = List.from(data['items'][itemIndex]['options']);
-        });
+        viewModel.resetSentence();
       });
 
       viewModel.markItemAsNotSolved();
-      
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -241,7 +247,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
       ));
       viewModel.markItemAsPassed();
 
-      if (uiState.exercise.items?[uiState.itemIndex].sound != null && isOnline) {
+      if (uiState.exercise.items?[uiState.itemIndex].sound != null &&
+          isOnline) {
         setState(() {
           loadingAudio = true;
         });
@@ -264,13 +271,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
 
   void goToNextItem() async {
     final provider = exerciseViewModelProvider(
-        ExerciseViewModelParams(
-            tutorialId: widget.tutorialId,
-            exerciseId: widget.exerciseId,
-            languageCode: widget.locale));
+        tutorialId: widget.tutorialId, exerciseId: widget.exerciseId, languageCode: widget.locale);
     final uiState = ref.read(provider).value!;
     final viewModel = ref.read(provider.notifier);
-      
+
     if (viewModel.hasNextItem()) {
       viewModel.goToNextItem();
     } else {
@@ -279,13 +283,14 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
 
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
-          Navigator.of(context).push(AnimatedRoute.create(ResultScreen(
-            tutorialId: widget.tutorialId,
-            solvedItemsCount: uiState.solvedItems.length,
-            notSolvedItemsCount: uiState.notSolvedItems.length,
-            nextExerciseId: nextExerciseId,
-            nextTutorialId: nextTutorialId,
-          )));
+          context.go('/tutorial/${widget.tutorialId}/result',
+              extra: ResultParams(
+                tutorialId: widget.tutorialId,
+                solvedItemsCount: uiState.solvedItems.length,
+                notSolvedItemsCount: uiState.notSolvedItems.length,
+                nextExerciseId: nextExerciseId,
+                nextTutorialId: nextTutorialId,
+              ));
         }
       });
     }

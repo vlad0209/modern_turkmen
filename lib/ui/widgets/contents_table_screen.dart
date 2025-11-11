@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modern_turkmen/ui/widgets/content_menu_item.dart';
 import 'package:modern_turkmen/ui/widgets/language_selection_button.dart';
 
@@ -22,10 +23,7 @@ class _ContentsTableScreenState extends ConsumerState<ContentsTableScreen> {
         actions: [LanguageSelectionButton(
           onPressed: () {
             ref.read(contentsTableViewModelProvider.notifier).toggleLocale();
-            setState(() {
-              // Update any local state if needed
-
-            });
+            context.go('/refresh', extra: '/');
           } ,
         )],
       ),
@@ -37,7 +35,7 @@ class _ContentsTableScreenState extends ConsumerState<ContentsTableScreen> {
           ),
         ),
         error: (error, stackTrace) => Center(
-          child: Text(error.toString()),
+          child: SelectableText('$error\n $stackTrace'),
         ),
         data: (tutorials) {
 

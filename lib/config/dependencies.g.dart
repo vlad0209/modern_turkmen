@@ -152,7 +152,7 @@ final audioRepositoryProvider = AutoDisposeProvider<AudioRepository>.internal(
 // ignore: unused_element
 typedef AudioRepositoryRef = AutoDisposeProviderRef<AudioRepository>;
 String _$languageRepositoryHash() =>
-    r'b0f32fe93cbf3b1b9b1cd84994a08e1d59c8e4cc';
+    r'5a03dd81f7cfc92add569a15f8973b6bff404815';
 
 /// See also [languageRepository].
 @ProviderFor(languageRepository)
@@ -170,5 +170,24 @@ final languageRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LanguageRepositoryRef = AutoDisposeProviderRef<LanguageRepository>;
+String _$onboardingRepositoryHash() =>
+    r'e086a50afd3b8f30581838f2f08f6d2c0423a44b';
+
+/// See also [onboardingRepository].
+@ProviderFor(onboardingRepository)
+final onboardingRepositoryProvider =
+    AutoDisposeProvider<OnboardingRepository>.internal(
+  onboardingRepository,
+  name: r'onboardingRepositoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$onboardingRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef OnboardingRepositoryRef = AutoDisposeProviderRef<OnboardingRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

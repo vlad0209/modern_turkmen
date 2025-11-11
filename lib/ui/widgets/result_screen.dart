@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:modern_turkmen/routes/animated_route.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modern_turkmen/ui/widgets/main_layout.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
-import 'package:modern_turkmen/ui/widgets/exercise_screen.dart';
-import 'package:modern_turkmen/ui/widgets/tutorial_screen.dart';
+
+
+class ResultParams {
+  final int solvedItemsCount;
+  final int notSolvedItemsCount;
+  final String tutorialId;
+  final String? nextExerciseId;
+  final String? nextTutorialId;
+
+  ResultParams(
+      {required this.solvedItemsCount,
+      required this.notSolvedItemsCount,
+      required this.tutorialId,
+      this.nextExerciseId,
+      this.nextTutorialId});
+}
 
 class ResultScreen extends StatelessWidget {
   final int solvedItemsCount;
@@ -77,16 +91,11 @@ class ResultScreen extends StatelessWidget {
   void goAHead(BuildContext context) {
     String? localeName = AppLocalizations.of(context)?.localeName;
     if (nextExerciseId != null) {
-      Navigator.of(context).push(AnimatedRoute.create(ExerciseScreen(
-          exerciseId: nextExerciseId!,
-          tutorialId: tutorialId,
-          locale: localeName!)));
+      context.go('/tutorial/$tutorialId/exercise/$localeName/$nextExerciseId');
     } else if (nextTutorialId != null) {
-      Navigator.of(context).push(
-          AnimatedRoute.create(TutorialScreen(tutorialId: nextTutorialId!)));
+      context.go('/tutorial/$nextTutorialId');
     } else {
-      Navigator.of(context)
-          .push(AnimatedRoute.create(TutorialScreen(tutorialId: tutorialId)));
+      context.go('/tutorial/$tutorialId');
     }
   }
 }

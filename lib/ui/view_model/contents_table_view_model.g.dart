@@ -7,7 +7,7 @@ part of 'contents_table_view_model.dart';
 // **************************************************************************
 
 String _$contentsTableViewModelHash() =>
-    r'db3ca46188135cdc616ff40b909cee19dcd2b666';
+    r'16642a43951167253d62eea6609477a21cab5765';
 
 /// See also [ContentsTableViewModel].
 @ProviderFor(ContentsTableViewModel)

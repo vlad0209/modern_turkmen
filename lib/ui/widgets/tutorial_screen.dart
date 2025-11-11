@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:markdown_widget/config/markdown_generator.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:modern_turkmen/routes/animated_route.dart';
-import 'package:modern_turkmen/ui/widgets/exercise_screen.dart';
 
 import 'main_layout.dart';
 import '../view_model/tutorial_view_model.dart';
@@ -29,6 +28,7 @@ class TutorialScreen extends ConsumerWidget {
         return MainLayout(
           title: uiState.tutorial.title,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (uiState.tutorial.imageUrl?.isNotEmpty == true)
                 CachedNetworkImage(
@@ -37,42 +37,14 @@ class TutorialScreen extends ConsumerWidget {
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               if (uiState.tutorial.content != null)
-                Html(
-                  data: uiState.tutorial.content,
-                  style: {
-                    "td": Style(
-                      padding:
-                          HtmlPaddings.symmetric(vertical: 3.0, horizontal: 3.0),
-                      border: const Border(
-                          bottom: BorderSide(color: Colors.purpleAccent)),
-                      //display: Display.INLINE_BLOCK,
-                    ),
-                    "h2": Style(fontSize: FontSize(50)),
-                    "h3": Style(fontSize: FontSize(40)),
-                    //"body": Style(fontSize: const FontSize(30)),
-                    "li em": Style(
-                        padding: HtmlPaddings.only(left: 30.0),
-                        display: Display.inlineBlock),
-                    '.column': Style(
-                      width: Width(MediaQuery.of(context).orientation ==
-                              Orientation.landscape
-                          ? (MediaQuery.of(context).size.width / 2) - 20
-                          : MediaQuery.of(context).size.width),
-                      padding: HtmlPaddings.only(left: 6.0),
-                    )
-                  },
-                ),
+                ...MarkdownGenerator().buildWidgets(uiState.tutorial.content!),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (uiState.exerciseId?.isNotEmpty == true)
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(AnimatedRoute.create(
-                              ExerciseScreen(
-                                  exerciseId: uiState.exerciseId!,
-                                  tutorialId: tutorialId,
-                                  locale: localeName)));
+                          context.go('/tutorial/$tutorialId/exercise/$localeName/${uiState.exerciseId}');
                         },
                         child: Text(AppLocalizations.of(context)!.startExercise))
                 ],
@@ -83,8 +55,7 @@ class TutorialScreen extends ConsumerWidget {
                   if (uiState.tutorial.prevTutorialId?.isNotEmpty == true)
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(AnimatedRoute.create(
-                              TutorialScreen(tutorialId: uiState.tutorial.prevTutorialId!)));
+                          context.go('/tutorial/${uiState.tutorial.prevTutorialId}');
                         },
                         child: Row(
                           children: [
@@ -95,8 +66,7 @@ class TutorialScreen extends ConsumerWidget {
                   if (uiState.tutorial.nextTutorialId?.isNotEmpty == true)
                     ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).push(AnimatedRoute.create(
-                              TutorialScreen(tutorialId: uiState.tutorial.nextTutorialId!)));
+                          context.go('/tutorial/${uiState.tutorial.nextTutorialId}');
                         },
                         child: Row(
                           children: [

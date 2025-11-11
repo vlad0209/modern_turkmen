@@ -8,32 +8,24 @@ import '../ui_state/exercise_ui_state.dart';
 
 part 'exercise_view_model.g.dart';
 
-class ExerciseViewModelParams {
-  final String tutorialId;
-  final String languageCode;
-  final String exerciseId;
-
-  ExerciseViewModelParams(
-      {required this.tutorialId,
-      required this.languageCode,
-      required this.exerciseId});
-}
-
 @riverpod
 class ExerciseViewModel extends _$ExerciseViewModel {
   late ExerciseRepository _exerciseRepository;
   late AudioRepository _audioRepository;
   late TutorialRepository _tutorialRepository;
   @override
-  FutureOr<ExerciseUiState> build(ExerciseViewModelParams params) async {
+  FutureOr<ExerciseUiState> build(
+      {required String tutorialId,
+      required String languageCode,
+      required String exerciseId}) async {
     _exerciseRepository = ref.watch(exerciseRepositoryProvider);
     _audioRepository = ref.watch(audioRepositoryProvider);
     _tutorialRepository = ref.watch(tutorialRepositoryProvider);
     final exercise = await _exerciseRepository.getExercise(
-        tutorialId: params.tutorialId,
-        languageCode: params.languageCode,
-        exerciseId: params.exerciseId);
-    exercise.items?[0].options.shuffle();
+        tutorialId: tutorialId,
+        languageCode: languageCode,
+        exerciseId: exerciseId);
+
     final url = exercise.items?[0].sound;
     Future? soundFuture;
     if (url != null) {
@@ -53,8 +45,21 @@ class ExerciseViewModel extends _$ExerciseViewModel {
   }
 
   void listenOnPlayingCompleted(void Function(void)? onCompleted) {
-    state = AsyncData(state.value!.copyWith(isPlayingAudio: false));
-    _audioRepository.onPlayingCompleted.listen(onCompleted);
+    _audioRepository.onPlayingCompleted.listen((data) {
+      if (onCompleted != null) {
+        state = AsyncData(state.value!.copyWith(isPlayingAudio: false));
+        onCompleted(data);
+      }
+    });
+  }
+
+  void listenOnPlayingStarted(void Function(void)? onStarted) {
+    _audioRepository.onPlayingStarted.listen((data) {
+      if (onStarted != null) {
+        state = AsyncData(state.value!.copyWith(isPlayingAudio: true));
+        onStarted(data);
+      }
+    });
   }
 
   void pauseAudio() {
@@ -67,16 +72,17 @@ class ExerciseViewModel extends _$ExerciseViewModel {
     state = AsyncData(state.value!.copyWith(isPlayingAudio: true));
   }
 
-  void chooseWord(String word) {
+  String chooseWord(String word) {
     state = AsyncData(state.value!.copyWith(
       sentence: state.value!.sentence.replaceFirst('<f/>', '<f>$word</f>'),
       options: state.value!.options.where((option) => option != word).toList(),
     ));
+    return state.value!.sentence;
   }
 
   void markItemAsNotSolved() {
     final itemIndex = state.value!.itemIndex;
-    final notSolvedItems = state.value!.notSolvedItems;
+    final notSolvedItems = List<int>.from(state.value!.notSolvedItems);
     if (!notSolvedItems.contains(itemIndex)) {
       notSolvedItems.add(itemIndex);
       state = AsyncData(state.value!.copyWith(notSolvedItems: notSolvedItems));
@@ -86,8 +92,8 @@ class ExerciseViewModel extends _$ExerciseViewModel {
   void markItemAsPassed() {
     final notSolvedItems = state.value!.notSolvedItems;
     final itemIndex = state.value!.itemIndex;
-    final solvedItems = state.value!.solvedItems;
-    final passedItems = state.value!.passedItems;
+    final solvedItems = List<int>.from(state.value!.solvedItems);
+    final passedItems = List<int>.from(state.value!.passedItems);
     if (!notSolvedItems.contains(itemIndex)) {
       solvedItems.add(itemIndex);
       passedItems.add(itemIndex);
@@ -108,9 +114,8 @@ class ExerciseViewModel extends _$ExerciseViewModel {
     Future.delayed(const Duration(seconds: 2), () {
       final uiState = state.value!;
       final itemIndex = uiState.itemIndex + 1;
-      uiState.exercise.items?[itemIndex].options.shuffle();
       final newUiState = uiState.copyWith(
-          itemIndex: uiState.itemIndex,
+          itemIndex: itemIndex,
           sentence: uiState.exercise.items?[itemIndex].sentence ?? '',
           options: List.from(uiState.exercise.items?[itemIndex].options ?? []),
           isPlayingAudio: false,
@@ -123,12 +128,23 @@ class ExerciseViewModel extends _$ExerciseViewModel {
 
   Future<String?> getNextExerciseId() {
     return _exerciseRepository.getNextExerciseId(
-        tutorialId: params.tutorialId,
-        languageCode: params.languageCode,
-        currentExerciseId: params.exerciseId);
+        tutorialId: tutorialId,
+        languageCode: languageCode,
+        currentExerciseId: exerciseId);
   }
 
   Future<String?> getNextTutorialId() {
-    return _tutorialRepository.getNextTutorialId(tutorialId: params.tutorialId);
+    return _tutorialRepository.getNextTutorialId(tutorialId: tutorialId);
   }
+
+  void resetSentence() {
+    final uiState = state.value!;
+    final itemIndex = uiState.itemIndex;
+    state = AsyncData(uiState.copyWith(
+      sentence: uiState.exercise.items?[itemIndex].sentence ?? '',
+      options: List.from(uiState.exercise.items?[itemIndex].options ?? []),
+    ));
+  }
+
+  
 }

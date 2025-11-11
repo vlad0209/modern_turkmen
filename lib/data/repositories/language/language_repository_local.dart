@@ -31,15 +31,16 @@ class LanguageRepositoryLocal extends LanguageRepository {
       code: languageCode,
       name: languageCode == 'en' ? 'English' : 'Русский',
     );
+    _sharedPreferencesService.setPreferredLanguageCode(languageCode);
     notifyListeners();
   }
 
   @override
-  void toggleLocale() {
+  Future<void> toggleLocale() async {
     _currentLanguage = _currentLanguage.code == 'en'
         ? Language(code: 'ru', name: 'Русский')
         : Language(code: 'en', name: 'English');
-
+    await _sharedPreferencesService.setPreferredLanguageCode(_currentLanguage.code);
     notifyListeners();
   }
   
