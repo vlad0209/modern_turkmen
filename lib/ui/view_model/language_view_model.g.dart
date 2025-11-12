@@ -6,7 +6,7 @@ part of 'language_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$languageViewModelHash() => r'32a62948bba6614daf3ddf2bf77f28b3ff9df985';
+String _$languageViewModelHash() => r'0a18813a5866e73f455ae99da6d193d95869761a';
 
 /// See also [LanguageViewModel].
 @ProviderFor(LanguageViewModel)

@@ -1,10 +1,10 @@
 [
     {
         "language": "en-US",
-        "text": "• Improved Language Selection\n\n• Enhanced language switching with proper async handling\n• Fixed potential timing issues when changing app language\n• Improved user experience with smoother language transitions\n• Better error handling for language preference saving"
+        "text": "Updated Gradle and NDK versions"
     },
     {
         "language": "ru",
-        "text": "• Улучшенный выбор языка\n\n• Улучшено переключение языка с правильной асинхронной обработкой\n• Исправлены потенциальные проблемы синхронизации при смене языка приложения\n• Улучшен пользовательский опыт с более плавными переходами между языками\n• Лучшая обработка ошибок при сохранении языковых предпочтений"
+        "text": "• Обновлены версии Gradle и NDK"
     }
 ]
