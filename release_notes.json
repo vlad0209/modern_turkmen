@@ -2,5 +2,9 @@
     {
         "language": "en-US",
         "text": "- Replaced Navigator with GoRouter for navigation in ExerciseScreen, LanguageSelect, ResultScreen, TutorialScreen, and WelcomeScreen. \n- Updated ExerciseScreen to improve audio playback state management and UI updates.\n- Refactored LanguageSelect to use the new language view model.\n- Introduced OnboardingRepository and its local implementation for onboarding state management.\n- Created AppUiState and AppViewModel to manage application-wide UI state.\n- Added routing logic for onboarding and tutorial navigation.\n- Removed deprecated dependencies and updated pubspec.yaml for new packages."
+    },
+    {
+        "language": "ru",
+        "text": "- Заменён Navigator на GoRouter для навигации в ExerciseScreen, LanguageSelect, ResultScreen, TutorialScreen и WelcomeScreen.\n- Обновлён ExerciseScreen для улучшенного управления состоянием воспроизведения аудио и обновления UI.\n- Рефакторинг LanguageSelect с использованием новой модели представления языка.\n- Введён OnboardingRepository и его локальная реализация для управления состоянием онбординга.\n- Создан AppUiState и AppViewModel для управления состоянием UI всего приложения.\n- Добавлена логика маршрутизации для навигации по онбордингу и туториалу.\n- Удалены устаревшие зависимости и обновлён pubspec.yaml для новых пакетов."
     }
 ]
