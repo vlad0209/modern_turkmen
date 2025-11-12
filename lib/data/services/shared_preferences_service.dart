@@ -10,7 +10,7 @@ class SharedPreferencesService {
     return AppConstants.supportedLanguageCodes.contains(code) ? code : 'en'; 
   }
 
-  void bookmarkTutorial(String tutorialId) async {
+  Future<void> bookmarkTutorial(String tutorialId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('bookmarked_tutorial', tutorialId);
   }

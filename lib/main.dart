@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modern_turkmen/config/dependencies.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
 import 'package:modern_turkmen/ui/view_model/app_view_model.dart';
 import 'firebase_options.dart';
@@ -49,7 +50,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             ),
         data: (uiState) {
           _router ??= router(
-              uiState.bookmarkedTutorialId, ref);
+              uiState.bookmarkedTutorialId, ref.read(onboardingRepositoryProvider));
               
           return MaterialApp.router(
             routerConfig: _router,

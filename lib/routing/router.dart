@@ -1,15 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modern_turkmen/data/repositories/onboarding/onboarding_repository.dart';
 import 'package:modern_turkmen/ui/widgets/exercise_screen.dart';
 
-import '../config/dependencies.dart';
 import '../ui/widgets/contents_table_screen.dart';
 import '../ui/widgets/result_screen.dart';
 import '../ui/widgets/tutorial_screen.dart';
 import '../ui/widgets/welcome_screen.dart';
 
-GoRouter router(String? tutorialId, WidgetRef ref) => GoRouter(
+GoRouter router(String? tutorialId, OnboardingRepository onboardingRepository) => GoRouter(
         initialLocation: tutorialId != null && tutorialId.isNotEmpty
             ? '/tutorial/$tutorialId'
             : '/',
@@ -34,8 +33,6 @@ GoRouter router(String? tutorialId, WidgetRef ref) => GoRouter(
           GoRoute(
               path: '/',
               redirect: (context, state) async {
-                final onboardingRepository =
-                    ref.read(onboardingRepositoryProvider);
                 final isFirstLaunch =
                     await onboardingRepository.isFirstLaunch();
                 if (isFirstLaunch) {

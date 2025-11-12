@@ -45,10 +45,15 @@ void main() {
     });
 
     test('should set language to English and save to preferences', () async {
+      when(mockSharedPreferencesService.getPreferredLanguageCode())
+          .thenAnswer((_) async => 'ru');
+      when(mockSharedPreferencesService.setPreferredLanguageCode('en'))
+          .thenAnswer((_) async {});
 
       repository = LanguageRepositoryLocal(
         sharedPreferencesService: mockSharedPreferencesService,
       );
+      await Future.delayed(Duration.zero); // Wait for _loadLanguage to complete
 
       await repository.setLanguage('en');
 
@@ -66,6 +71,7 @@ void main() {
       repository = LanguageRepositoryLocal(
         sharedPreferencesService: mockSharedPreferencesService,
       );
+      await Future.delayed(Duration.zero); // Wait for _loadLanguage to complete
 
       await repository.setLanguage('ru');
 
@@ -83,6 +89,7 @@ void main() {
       repository = LanguageRepositoryLocal(
         sharedPreferencesService: mockSharedPreferencesService,
       );
+      await Future.delayed(Duration.zero); // Wait for _loadLanguage to complete
 
       await repository.toggleLocale();
 
