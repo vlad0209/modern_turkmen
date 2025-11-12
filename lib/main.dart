@@ -49,7 +49,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             ),
         data: (uiState) {
           _router ??= router(
-              uiState.bookmarkedTutorialId, uiState.isFirstLaunch);
+              uiState.bookmarkedTutorialId, ref);
               
           return MaterialApp.router(
             routerConfig: _router,

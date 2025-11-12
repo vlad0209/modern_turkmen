@@ -1,10 +1,10 @@
 [
     {
         "language": "en-US",
-        "text": "- Replaced Navigator with GoRouter for navigation in ExerciseScreen, LanguageSelect, ResultScreen, TutorialScreen, and WelcomeScreen. \n- Updated ExerciseScreen to improve audio playback state management and UI updates.\n- Refactored LanguageSelect to use the new language view model.\n- Introduced OnboardingRepository and its local implementation for onboarding state management.\n- Created AppUiState and AppViewModel to manage application-wide UI state.\n- Added routing logic for onboarding and tutorial navigation.\n- Removed deprecated dependencies and updated pubspec.yaml for new packages."
+        "text": "• Improved Language Selection\n\n• Enhanced language switching with proper async handling\n• Fixed potential timing issues when changing app language\n• Improved user experience with smoother language transitions\n• Better error handling for language preference saving"
     },
     {
         "language": "ru",
-        "text": "- Заменён Navigator на GoRouter для навигации в ExerciseScreen, LanguageSelect, ResultScreen, TutorialScreen и WelcomeScreen.\n- Обновлён ExerciseScreen для улучшенного управления состоянием воспроизведения аудио и обновления UI.\n- Рефакторинг LanguageSelect с использованием новой модели представления языка.\n- Введён OnboardingRepository и его локальная реализация для управления состоянием онбординга.\n- Создан AppUiState и AppViewModel для управления состоянием UI всего приложения.\n- Добавлена логика маршрутизации для навигации по онбордингу и туториалу.\n- Удалены устаревшие зависимости и обновлён pubspec.yaml для новых пакетов."
+        "text": "• Улучшенный выбор языка\n\n• Улучшено переключение языка с правильной асинхронной обработкой\n• Исправлены потенциальные проблемы синхронизации при смене языка приложения\n• Улучшен пользовательский опыт с более плавными переходами между языками\n• Лучшая обработка ошибок при сохранении языковых предпочтений"
     }
 ]

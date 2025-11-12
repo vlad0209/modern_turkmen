@@ -1,18 +1,24 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modern_turkmen/ui/widgets/exercise_screen.dart';
 
+import '../config/dependencies.dart';
 import '../ui/widgets/contents_table_screen.dart';
 import '../ui/widgets/result_screen.dart';
 import '../ui/widgets/tutorial_screen.dart';
 import '../ui/widgets/welcome_screen.dart';
 
-GoRouter router(String? tutorialId, bool isFirstLaunch) =>
-    GoRouter(
+GoRouter router(String? tutorialId, WidgetRef ref) => GoRouter(
         initialLocation: tutorialId != null && tutorialId.isNotEmpty
             ? '/tutorial/$tutorialId'
             : '/',
         routes: [
+          GoRoute(
+              path: '/welcome',
+              builder: (context, state) {
+                return const WelcomeScreen();
+              }),
           GoRoute(
             path: '/refresh',
             builder: (context, state) {
@@ -27,12 +33,19 @@ GoRouter router(String? tutorialId, bool isFirstLaunch) =>
           ),
           GoRoute(
               path: '/',
-              builder: (_, __) {
+              redirect: (context, state) async {
+                final onboardingRepository =
+                    ref.read(onboardingRepositoryProvider);
+                final isFirstLaunch =
+                    await onboardingRepository.isFirstLaunch();
                 if (isFirstLaunch) {
-                  return const WelcomeScreen();
+                  return '/welcome';
                 } else {
-                  return ContentsTableScreen();
+                  return null;
                 }
+              },
+              builder: (_, __) {
+                return ContentsTableScreen();
               },
               routes: [
                 GoRoute(
@@ -52,16 +65,17 @@ GoRouter router(String? tutorialId, bool isFirstLaunch) =>
                           );
                         },
                       ),
-                      GoRoute(path: 'result', builder: (context, state) {
-                        final params =
-                            state.extra as ResultParams;
-                        return ResultScreen(
-                            solvedItemsCount: params.solvedItemsCount,
-                            notSolvedItemsCount: params.notSolvedItemsCount,
-                            tutorialId: params.tutorialId,
-                            nextExerciseId: params.nextExerciseId,
-                            nextTutorialId: params.nextTutorialId);
-                      })
+                      GoRoute(
+                          path: 'result',
+                          builder: (context, state) {
+                            final params = state.extra as ResultParams;
+                            return ResultScreen(
+                                solvedItemsCount: params.solvedItemsCount,
+                                notSolvedItemsCount: params.notSolvedItemsCount,
+                                tutorialId: params.tutorialId,
+                                nextExerciseId: params.nextExerciseId,
+                                nextTutorialId: params.nextTutorialId);
+                          })
                     ])
               ])
         ]);

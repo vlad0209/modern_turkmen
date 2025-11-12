@@ -26,12 +26,12 @@ class LanguageRepositoryLocal extends LanguageRepository {
   }
 
   @override
-  void setLanguage(String languageCode) {
+  Future<void> setLanguage(String languageCode) async {
     _currentLanguage = Language(
       code: languageCode,
       name: languageCode == 'en' ? 'English' : 'Русский',
     );
-    _sharedPreferencesService.setPreferredLanguageCode(languageCode);
+    await _sharedPreferencesService.setPreferredLanguageCode(languageCode);
     notifyListeners();
   }
 

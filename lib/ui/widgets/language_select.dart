@@ -32,10 +32,10 @@ class LanguageSelect extends ConsumerWidget {
             MaterialButton(
               minWidth: 120,
               onPressed: () async {
+                await ref.read(languageViewModelProvider.notifier).setLanguage('en');
                 if(callback != null) {
-                  ref.read(languageViewModelProvider.notifier).setLanguage('en');
                   callback!();
-                } else {
+                } else if(context.mounted) {
                   context.pop();
                 }
               },
@@ -47,9 +47,10 @@ class LanguageSelect extends ConsumerWidget {
             MaterialButton(
               minWidth: 120,
               onPressed: () async {
+                await ref.read(languageViewModelProvider.notifier).setLanguage('en');
                 if(callback != null) {
                   callback!();
-                } else {
+                } else if(context.mounted) {
                   context.pop();
                 }
               },
