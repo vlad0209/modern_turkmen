@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:local_hero/local_hero.dart';
 import 'package:modern_turkmen/l10n/app_localizations.dart';
-import 'package:modern_turkmen/widgets/word_card.dart';
+import 'package:modern_turkmen/ui/widgets/word_card.dart';
 import 'package:modern_turkmen/ui/widgets/main_layout.dart';
 import 'package:modern_turkmen/ui/widgets/result_screen.dart';
 import '../../config/app_constants.dart';
