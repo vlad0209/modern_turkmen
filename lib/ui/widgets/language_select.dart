@@ -47,7 +47,7 @@ class LanguageSelect extends ConsumerWidget {
             MaterialButton(
               minWidth: 120,
               onPressed: () async {
-                await ref.read(languageViewModelProvider.notifier).setLanguage('en');
+                await ref.read(languageViewModelProvider.notifier).setLanguage('ru');
                 if(callback != null) {
                   callback!();
                 } else if(context.mounted) {
