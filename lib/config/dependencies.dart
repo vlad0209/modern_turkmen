@@ -64,7 +64,7 @@ AudioRepository audioRepository(Ref ref) {
 }
 
 @riverpod
-LanguageRepository languageRepository(Ref ref) {
+Raw<LanguageRepository> languageRepository(Ref ref) {
   return LanguageRepositoryLocal(
       sharedPreferencesService: ref.watch(sharedPreferencesServiceProvider));
 }
