@@ -122,10 +122,12 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              uiState.exercise.exampleTranslation!,
-                              style:
-                                  const TextStyle(fontStyle: FontStyle.italic),
+                            Expanded(
+                              child: Text(
+                                uiState.exercise.exampleTranslation!,
+                                style:
+                                    const TextStyle(fontStyle: FontStyle.italic),
+                              ),
                             ),
                           ],
                         ),
@@ -186,11 +188,11 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                                 spacing: 12,
                                 runSpacing: 9,
                                 children: uiState.options
-                                    .map((item) => GestureDetector(
+                                    .map((option) => GestureDetector(
                                         onTap: () async {
                                           if (!uiState.passedItems
                                               .contains(uiState.itemIndex)) {
-                                            final sentence = viewModel.chooseWord(item);
+                                            final sentence = viewModel.chooseWord(option);
                                             if (!sentence
                                                 .contains('<f/>')) {
                                               checkSentence();
@@ -198,10 +200,10 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                                           }
                                         },
                                         child: LocalHero(
-                                          key: Key(item),
-                                          tag: item,
+                                          key: Key(option),
+                                          tag: option,
                                           child: WordCard(
-                                            content: item,
+                                            content: option,
                                           ),
                                         )))
                                     .toList()
