@@ -1,10 +1,10 @@
 [
     {
         "language": "en-US",
-        "text": "Fixed Russian language button selection issue"
+        "text": "Refactor the  Exercise Screen to use Expanded widget to improve layout flexibility"
     },
     {
         "language": "ru",
-        "text": "Исправлена проблема с кнопкой выбора русского языка"
+        "text": "Рефакторинг экрана упражнений с использованием виджета Expanded для улучшения гибкости макета"
     }
 ]
