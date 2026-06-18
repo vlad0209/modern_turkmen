@@ -121,7 +121,7 @@ void main() {
         exerciseId: 'exercise1',
       ).future);
 
-      final result = viewModel.chooseWord('world');
+      final result = viewModel.chooseWord(0);
 
       expect(result, equals('Hello <f>world</f>'));
       expect(

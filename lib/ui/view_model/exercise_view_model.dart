@@ -72,10 +72,13 @@ class ExerciseViewModel extends _$ExerciseViewModel {
     state = AsyncData(state.value!.copyWith(isPlayingAudio: true));
   }
 
-  String chooseWord(String word) {
+  String chooseWord(int wordIndex) {
+    final word = state.value!.options[wordIndex];
+    final options = List<String>.from(state.value!.options);
+    options.removeAt(wordIndex);
     state = AsyncData(state.value!.copyWith(
       sentence: state.value!.sentence.replaceFirst('<f/>', '<f>$word</f>'),
-      options: state.value!.options.where((option) => option != word).toList(),
+      options: options,
     ));
     return state.value!.sentence;
   }
@@ -111,19 +114,17 @@ class ExerciseViewModel extends _$ExerciseViewModel {
       state.value!.itemIndex < state.value!.exercise.items!.length - 1;
 
   void goToNextItem() {
-    Future.delayed(const Duration(seconds: 2), () {
-      final uiState = state.value!;
-      final itemIndex = uiState.itemIndex + 1;
-      final newUiState = uiState.copyWith(
-          itemIndex: itemIndex,
-          sentence: uiState.exercise.items?[itemIndex].sentence ?? '',
-          options: List.from(uiState.exercise.items?[itemIndex].options ?? []),
-          isPlayingAudio: false,
-          soundFuture: _audioRepository
-              .setSourceUrl(uiState.exercise.items?[itemIndex].sound ?? ''),
-          checking: false);
-      state = AsyncData(newUiState);
-    });
+    final uiState = state.value!;
+    final itemIndex = uiState.itemIndex + 1;
+    final newUiState = uiState.copyWith(
+        itemIndex: itemIndex,
+        sentence: uiState.exercise.items?[itemIndex].sentence ?? '',
+        options: List.from(uiState.exercise.items?[itemIndex].options ?? []),
+        isPlayingAudio: false,
+        soundFuture: _audioRepository
+            .setSourceUrl(uiState.exercise.items?[itemIndex].sound ?? ''),
+        checking: false);
+    state = AsyncData(newUiState);
   }
 
   Future<String?> getNextExerciseId() {
@@ -145,6 +146,4 @@ class ExerciseViewModel extends _$ExerciseViewModel {
       options: List.from(uiState.exercise.items?[itemIndex].options ?? []),
     ));
   }
-
-  
 }

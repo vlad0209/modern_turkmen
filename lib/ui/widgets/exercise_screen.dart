@@ -8,6 +8,7 @@ import 'package:modern_turkmen/ui/widgets/word_card.dart';
 import 'package:modern_turkmen/ui/widgets/main_layout.dart';
 import 'package:modern_turkmen/ui/widgets/result_screen.dart';
 import '../../config/app_constants.dart';
+import '../ui_state/exercise_ui_state.dart';
 import '../view_model/exercise_view_model.dart';
 
 class ExerciseScreen extends ConsumerStatefulWidget {
@@ -28,17 +29,17 @@ class ExerciseScreen extends ConsumerStatefulWidget {
 class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
   bool loadingAudio = false;
   bool isOnline = true;
+  List<LocalHero>? optionWidgets;
+  List<Widget>? sentenceWidgets;
 
   @override
   void initState() {
     super.initState();
-    final viewModel =
-    ref
-        .read(exerciseViewModelProvider(
-                tutorialId: widget.tutorialId,
-                exerciseId: widget.exerciseId,
-                languageCode: widget.locale)
-            .notifier);
+    final viewModel = ref.read(exerciseViewModelProvider(
+            tutorialId: widget.tutorialId,
+            exerciseId: widget.exerciseId,
+            languageCode: widget.locale)
+        .notifier);
     viewModel.listenOnPlayingStarted((_) {
       setState(() {
         loadingAudio = false;
@@ -75,6 +76,12 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                     child: Text(error.toString()),
                   ),
               data: (uiState) {
+                if (kDebugMode) {
+                  print(optionWidgets);
+                  print(sentenceWidgets);
+                }
+                optionWidgets ??= _buildOptions(uiState, viewModel);
+                sentenceWidgets ??= _parseContent(uiState.sentence, true);
                 return SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
@@ -125,15 +132,15 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                             Expanded(
                               child: Text(
                                 uiState.exercise.exampleTranslation!,
-                                style:
-                                    const TextStyle(fontStyle: FontStyle.italic),
+                                style: const TextStyle(
+                                    fontStyle: FontStyle.italic),
                               ),
                             ),
                           ],
                         ),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
-                        children: parseContent(
+                        children: _parseContent(
                             uiState.exercise.example ?? '', false,
                             useKeys: false),
                       ),
@@ -156,9 +163,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                         textAlign: TextAlign.center,
                       ),
                       Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: parseContent(uiState.sentence, true),
-                      ),
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: sentenceWidgets!),
                       if (loadingAudio)
                         const Center(
                           child: CircularProgressIndicator(
@@ -171,7 +177,8 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                               viewModel.pauseAudio();
                             },
                             icon: const Icon(Icons.pause)),
-                      if (uiState.isPlayingAudio == false && uiState.sentence.contains('<f/>') == false)
+                      if (uiState.isPlayingAudio == false &&
+                          uiState.sentence.contains('<f/>') == false)
                         IconButton(
                             onPressed: () {
                               viewModel.resumeAudio();
@@ -187,27 +194,35 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
                             Wrap(
                                 spacing: 12,
                                 runSpacing: 9,
-                                children: uiState.options
-                                    .map((option) => GestureDetector(
-                                        onTap: () async {
-                                          if (!uiState.passedItems
-                                              .contains(uiState.itemIndex)) {
-                                            final sentence = viewModel.chooseWord(option);
-                                            if (!sentence
-                                                .contains('<f/>')) {
-                                              checkSentence();
+                                children: optionWidgets!
+                                    .map((optionWidget) => GestureDetector(
+                                          onTap: () async {
+                                            if (!uiState.passedItems
+                                                .contains(uiState.itemIndex)) {
+                                              final optionIndex = optionWidgets!
+                                                  .indexOf(optionWidget);
+                                              final sentence = viewModel
+                                                  .chooseWord(optionIndex);
+                                              setState(() {
+                                                final wordTagIndex =
+                                                    sentenceWidgets!.indexWhere(
+                                                        (widget) =>
+                                                            widget
+                                                                .runtimeType ==
+                                                            WordCard);
+                                                sentenceWidgets![wordTagIndex] =
+                                                    optionWidget;
+                                                optionWidgets!
+                                                    .removeAt(optionIndex);
+                                              });
+                                              if (!sentence.contains('<f/>')) {
+                                                checkSentence();
+                                              }
                                             }
-                                          }
-                                        },
-                                        child: LocalHero(
-                                          key: Key(option),
-                                          tag: option,
-                                          child: WordCard(
-                                            content: option,
-                                          ),
-                                        )))
-                                    .toList()
-                                    .cast()),
+                                          },
+                                          child: optionWidget,
+                                        ))
+                                    .toList())
                           ],
                         ),
                     ],
@@ -217,27 +232,71 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
         ));
   }
 
+  List<LocalHero> _buildOptions(
+      ExerciseUiState uiState, ExerciseViewModel viewModel) {
+    List<LocalHero> optionWidgets = [];
+    Map<String, String> tagOptions = _getTagOptions(uiState);
+    if (kDebugMode) {
+      print(tagOptions);
+    }
+    for (var tag in tagOptions.keys) {
+      final option = tagOptions[tag];
+      optionWidgets.add(LocalHero(
+        key: Key(tag),
+        tag: tag,
+        child: WordCard(
+          content: option!,
+        ),
+      ));
+    }
+    return optionWidgets;
+  }
+
+  Map<String, String> _getTagOptions(ExerciseUiState uiState) {
+    Map<String, String> tagOptions = {};
+    for (var option in uiState.options) {
+      String tag = option;
+      int index = 1;
+      while (tagOptions.containsKey(tag)) {
+        tag = "$option${++index}";
+      }
+      tagOptions[tag] = option;
+    }
+    return tagOptions;
+  }
+
   void checkSentence() async {
-    final uiState = ref.read(exerciseViewModelProvider(
-        tutorialId: widget.tutorialId,
-        exerciseId: widget.exerciseId,
-        languageCode: widget.locale)).value!;
+    final uiState = ref
+        .read(exerciseViewModelProvider(
+            tutorialId: widget.tutorialId,
+            exerciseId: widget.exerciseId,
+            languageCode: widget.locale))
+        .value!;
 
     String enteredSentence =
         uiState.sentence.replaceAll(RegExp(r'<f>|</f>'), '');
 
     final viewModel = ref.read(exerciseViewModelProvider(
-            tutorialId: widget.tutorialId, exerciseId: widget.exerciseId, languageCode: widget.locale)
+            tutorialId: widget.tutorialId,
+            exerciseId: widget.exerciseId,
+            languageCode: widget.locale)
         .notifier);
-    
 
     if (enteredSentence !=
         uiState.exercise.items?[uiState.itemIndex].solution) {
+      if (kDebugMode) {
+        print(
+            'Difference: ${enteredSentence.compareTo(uiState.exercise.items![uiState.itemIndex].solution)}');
+      }
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.wrongTry)));
       Future.delayed(const Duration(seconds: 2), () {
         viewModel.resetSentence();
+        setState(() {
+          sentenceWidgets = null;
+          optionWidgets = null;
+        });
       });
 
       viewModel.markItemAsNotSolved();
@@ -273,18 +332,26 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
 
   void goToNextItem() async {
     final provider = exerciseViewModelProvider(
-        tutorialId: widget.tutorialId, exerciseId: widget.exerciseId, languageCode: widget.locale);
-    final uiState = ref.read(provider).value!;
+        tutorialId: widget.tutorialId,
+        exerciseId: widget.exerciseId,
+        languageCode: widget.locale);
     final viewModel = ref.read(provider.notifier);
 
     if (viewModel.hasNextItem()) {
-      viewModel.goToNextItem();
+      Future.delayed(Duration(seconds: 2), () {
+        viewModel.goToNextItem();
+        setState(() {
+          optionWidgets = null;
+          sentenceWidgets = null;
+        });
+      });
     } else {
       final nextExerciseId = await viewModel.getNextExerciseId();
       final nextTutorialId = await viewModel.getNextTutorialId();
 
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
+          final uiState = ref.read(provider).value!;
           context.go('/tutorial/${widget.tutorialId}/result',
               extra: ResultParams(
                 tutorialId: widget.tutorialId,
@@ -298,7 +365,7 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
     }
   }
 
-  List<Widget> parseContent(String content, bool animateWordCard,
+  List<Widget> _parseContent(String content, bool animateWordCard,
       {bool useKeys = true}) {
     List<Widget> widgets = [];
     RegExp exp = RegExp(r'(<f>(.*?)</f>|<f/>|\(.*?\))');
@@ -316,9 +383,16 @@ class _ExerciseScreenState extends ConsumerState<ExerciseScreen> {
           final wordCard = WordCard(
             content: word,
           );
+          String tag = word;
+          int index = 1;
+          while (widgets
+              .any((widget) => widget is LocalHero && widget.tag == tag)) {
+            tag = "$word${++index}";
+          }
+
           widgets.add(LocalHero(
-            key: useKeys ? Key(word) : null,
-            tag: word,
+            key: useKeys ? Key(tag) : null,
+            tag: tag,
             enabled: animateWordCard,
             child: wordCard,
           ));
