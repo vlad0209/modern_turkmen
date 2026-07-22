@@ -1,10 +1,10 @@
 [
     {
         "language": "en-US",
-        "text": "Fixed exercise word selection."
+        "text": "Bumped targetSdkVersion to 36."
     },
     {
         "language": "ru",
-        "text": "Исправлена ​​ошибка в выборе слов для упражнений."
+        "text": "Повышена версия targetSdkVersion до 36."
     }
 ]
