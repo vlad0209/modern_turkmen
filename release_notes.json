@@ -1,10 +1,10 @@
 [
     {
         "language": "en-US",
-        "text": "Bumped targetSdkVersion to 36."
+        "text": "Security update"
     },
     {
         "language": "ru",
-        "text": "Повышена версия targetSdkVersion до 36."
+        "text": "Обновление безопасности"
     }
 ]
